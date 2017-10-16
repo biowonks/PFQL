@@ -11,6 +11,43 @@ describe('Feature Query Language - FQL', function() {
 			let	pfqlService = new PFQLService()
 			expect(pfqlService.initRules.bind(pfqlService)).to.throw('No rules have been passed in the constructor')
 		})
+		it('If empty rules are passed, it should match any ', function() {
+			let setsOfRules = [{}]
+			let expected = [
+				[0], // CheW | CheW
+				[0], // CheW | Response_reg
+				[0], // CheW
+				[0], // Hpt | P2 | H-kinase_dim | HATPase_c | CheW
+				[0], // Hpt | P2 | H-kinase_dim | HATPase_c | CheW | CheW
+				[0], // Hpt | P2 | H-kinase_dim | HATPase_c | CheW | Response_reg
+				[0], // CheW | CheW | CheW
+				[0], // Response_reg | NMT1_2 | CheW
+				[0], // CheW | CheR
+				[0], // Response_reg | CheW
+				[0], // TM | Cache_1 | TM | HAMP | MCPsignal
+				[0], // HAMP | MCPsignal
+				[0], // PAS_9 | PAS | PAS_4 | PAS_3 | TM | TM | MCPsignal
+				[0], // **
+				[0], // **
+				[0], // TM | TM | MCPsignal
+				[0], // TM | MCPsignal | Rhodanese
+				[0], // TM | TM | TM | TM | MCPsignal
+				[0], // TM | TM | TM | TM | TM | TM | MCPsignal
+				[0],  // TM | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
+				[0], // TM | Cache_2 | Cache_1 | TM | HAMP | MCPsignal
+				[0], // TM | Cache_1 | Cache_2 | TM | HAMP | MCPsignal
+				[0], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
+				[0] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
+			]
+			let pfqlService = new PFQLService([setsOfRules])
+			pfqlService.initRules()
+
+			let results = []
+			sampleData.forEach(function(item) {
+				results.push(pfqlService.findMatches(item).PFQLMatches)
+			})
+			expect(results).eql(expected)
+		})
 	})
 	describe('Nuts and bolts ::', function() {
 		it('check behaviour _addResources with two ruleIndex', function() {
@@ -48,7 +85,7 @@ describe('Feature Query Language - FQL', function() {
 			expect(pfqlService.resources).eql([['pfam28', 'das'], ['pfam28', 'das']])
 		})
 		it('check behaviour _processFeaturesInfo', function() {
-			let setOfRules = [
+			let setsOfRules = [
 				{
 					pos: [
 						{
@@ -68,7 +105,7 @@ describe('Feature Query Language - FQL', function() {
 					]
 				}
 			]
-			let	pfqlService = new PFQLService([setOfRules])
+			let	pfqlService = new PFQLService([setsOfRules])
 			pfqlService.initRules()
 			let info = {
 				t: {
@@ -95,7 +132,7 @@ describe('Feature Query Language - FQL', function() {
 			)
 		})
 		it('check behaviour _processFeaturesInfo with different resources', function() {
-			let setOfRules = [
+			let setsOfRules = [
 				{
 					pos: [
 						{
@@ -119,7 +156,7 @@ describe('Feature Query Language - FQL', function() {
 					]
 				}
 			]
-			let	pfqlService = new PFQLService([setOfRules])
+			let	pfqlService = new PFQLService([setsOfRules])
 			pfqlService.initRules()
 			let info = {
 				t: {
@@ -147,7 +184,7 @@ describe('Feature Query Language - FQL', function() {
 		})
 		describe('check behaviour of _parseRules', function() {
 			it('with missing pos', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						Npos: [
 							{
@@ -157,13 +194,13 @@ describe('Feature Query Language - FQL', function() {
 						]
 					}
 				]
-				let	pfqlService = new PFQLService([setOfRules])
+				let	pfqlService = new PFQLService([setsOfRules])
 				pfqlService.initRules()
 				expect(pfqlService.parsedSetsOfRules[0][0].pos).to.be.null
 				expect(pfqlService.parsedSetsOfRules[0][0].Npos).to.not.be.null
 			})
 			it('with missing Npos', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						pos: [
 							{
@@ -173,14 +210,14 @@ describe('Feature Query Language - FQL', function() {
 						]
 					}
 				]
-				let	pfqlService = new PFQLService([setOfRules])
+				let	pfqlService = new PFQLService([setsOfRules])
 				pfqlService.initRules()
 				expect(pfqlService.parsedSetsOfRules[0][0].pos).to.not.be.null
 				expect(pfqlService.parsedSetsOfRules[0][0].Npos).to.be.null
 			})
 			it('with missing Npos and pos', function() {
-				let setOfRules = [{}]
-				let	pfqlService = new PFQLService([setOfRules])
+				let setsOfRules = [{}]
+				let	pfqlService = new PFQLService([setsOfRules])
 				pfqlService.initRules()
 				expect(pfqlService.parsedSetsOfRules[0][0].pos).to.be.null
 				expect(pfqlService.parsedSetsOfRules[0][0].Npos).to.be.null
@@ -378,10 +415,10 @@ describe('Feature Query Language - FQL', function() {
 				}
 			]
 			let	pfqlService = new PFQLService([simpleRule])
-			expect(pfqlService.setsOfRules).eql([simpleRule])
+			expect(pfqlService.query).eql([simpleRule])
 		})
 		it('After initRules, all resources used in rules should appear in .resources', function() {
-			let setOfRules = [
+			let setsOfRules = [
 				{
 					pos: [
 						{
@@ -399,14 +436,14 @@ describe('Feature Query Language - FQL', function() {
 					]
 				}
 			]
-			let	pfqlService = new PFQLService([setOfRules])
-			pfqlService.initRules(setOfRules)
+			let	pfqlService = new PFQLService([setsOfRules])
+			pfqlService.initRules(setsOfRules)
 			let expected = ['pfam29', 'das']
 			expect(pfqlService.resources).eql([expected])
 		})
 		describe('Missing pos or Npos in arguments should pass pos and Npos null rules', function() {
 			it('Missing pos should pass undefined for rules.pos', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						Npos: [
 							{
@@ -416,14 +453,14 @@ describe('Feature Query Language - FQL', function() {
 						]
 					}
 				]
-				let	pfqlService = new PFQLService([setOfRules])
+				let	pfqlService = new PFQLService([setsOfRules])
 				pfqlService.initRules()
-				expect(pfqlService.setsOfRules[0].pos).to.be.undefined
+				expect(pfqlService.query[0].pos).to.be.undefined
 			})
 		})
 		describe('Checking the integrity of rules - should throw informative Errors', function() {
 			it('Missing mandatory field in pos type rule resource should throw Error', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						pos: [
 							{
@@ -440,11 +477,11 @@ describe('Feature Query Language - FQL', function() {
 						]
 					}
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 				expect(pfqlService.initRules.bind(pfqlService)).to.throw('Each pos rule must explicitly define a resource: \n{"feature":"Response_reg"}')
 			})
 			it('Missing mandatory field in pos type rule feature should throw Error', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						pos: [
 							{
@@ -461,11 +498,11 @@ describe('Feature Query Language - FQL', function() {
 						]
 					}
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 				expect(pfqlService.initRules.bind(pfqlService)).to.throw('Each pos rule must explicitly define a feature: \n{"resource":"pfam29"}')
 			})
 			it('Missing both mandatory fields in pos type rule resource and feature should throw Error', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						pos: [
 							{
@@ -481,11 +518,11 @@ describe('Feature Query Language - FQL', function() {
 						]
 					}
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 				expect(pfqlService.initRules.bind(pfqlService)).to.throw('Each pos rule must explicitly define a resource and feature: \n{}')
 			})
 			it('Missing mandatory field in Npos type rule resource should throw Error', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						Npos: [
 							{
@@ -502,11 +539,11 @@ describe('Feature Query Language - FQL', function() {
 						]
 					}
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 				expect(pfqlService.initRules.bind(pfqlService)).to.throw('Each Npos rule must explicitly define a resource: \n{"feature":"Response_reg"}')
 			})
 			it('Missing mandatory field in Npos type rule feature should throw Error', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						Npos: [
 							{
@@ -523,11 +560,11 @@ describe('Feature Query Language - FQL', function() {
 						]
 					}
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 				expect(pfqlService.initRules.bind(pfqlService)).to.throw('Each Npos rule must explicitly define a feature: \n{"resource":"pfam29"}')
 			})
 			it('Missing both mandatory fields in Npos type rule resource and feature should throw Error', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						Npos: [
 							{
@@ -543,11 +580,11 @@ describe('Feature Query Language - FQL', function() {
 						]
 					}
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 				expect(pfqlService.initRules.bind(pfqlService)).to.throw('Each Npos rule must explicitly define a resource and feature: \n{}')
 			})
 			it('Wrong wild card "*" instead of ".*" in positional rules', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						pos: [
 							{
@@ -566,11 +603,11 @@ describe('Feature Query Language - FQL', function() {
 						]
 					}
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 				expect(pfqlService.initRules.bind(pfqlService)).to.throw('Wrong wild card. Change "*" to ".*" in:\n{"resource":"pfam28","feature":"*","count":"{2}"}')
 			})
 			it('Wrong wild card "*" instead of ".*" in non-positional rules', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						Npos: [
 							{
@@ -581,7 +618,7 @@ describe('Feature Query Language - FQL', function() {
 						]
 					}
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 				expect(pfqlService.initRules.bind(pfqlService)).to.throw('Wrong wild card. Change "*" to ".*" in:\n{"resource":"pfam28","feature":"*","count":"{2}"}')
 			})
 		})
@@ -589,7 +626,7 @@ describe('Feature Query Language - FQL', function() {
 	describe('Non positional rules :: ', function() {
 		describe('Single Rule - If broken, fix this first', function() {
 			it('Filter proteins sequences with any number of matches, anywhere in the sequence, to a single CheW domain from pfam29', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						Npos: [
 							{
@@ -625,7 +662,7 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 				pfqlService.initRules()
 
 				let results = []
@@ -635,7 +672,7 @@ describe('Feature Query Language - FQL', function() {
 				expect(results).eql(expected)
 			})
 			it('Filter proteins sequences with 1 or 2 matches, anywhere in the sequence, to a single CheW domain from pfam29', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						Npos: [
 							{
@@ -672,7 +709,7 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 				pfqlService.initRules()
 
 				let results = []
@@ -682,7 +719,7 @@ describe('Feature Query Language - FQL', function() {
 				expect(results).eql(expected)
 			})
 			it('Filter proteins sequences with 2 or 3 matches, anywhere in the sequence, to a single CheW domain from pfam29', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						Npos: [
 							{
@@ -719,7 +756,7 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 				pfqlService.initRules()
 
 				let results = []
@@ -729,7 +766,7 @@ describe('Feature Query Language - FQL', function() {
 				expect(results).eql(expected)
 			})
 			it('Filter proteins sequences with 3 or more transmembrane regions, anywhere in the sequence', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						Npos: [
 							{
@@ -766,7 +803,7 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 				pfqlService.initRules()
 
 				let results = []
@@ -776,7 +813,7 @@ describe('Feature Query Language - FQL', function() {
 				expect(results).eql(expected)
 			})
 			it('Filter proteins sequences without transmembrane regions', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						Npos: [
 							{
@@ -813,7 +850,7 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 				pfqlService.initRules()
 
 				let results = []
@@ -823,7 +860,7 @@ describe('Feature Query Language - FQL', function() {
 				expect(results).eql(expected)
 			})
 			it('Filter proteins with 1 domain from pfam28', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						Npos: [
 							{
@@ -860,7 +897,7 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 				pfqlService.initRules()
 
 				let results = []
@@ -872,7 +909,7 @@ describe('Feature Query Language - FQL', function() {
 		})
 		describe('Multiple Rules - AND mode', function() {
 			it('Filter proteins sequences with at least 1 match to CheW domain in pfam28 AND only 1 match to HATPase_c domain in pfam28', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						Npos: [
 							{
@@ -914,7 +951,7 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 				pfqlService.initRules()
 
 				let results = []
@@ -924,7 +961,7 @@ describe('Feature Query Language - FQL', function() {
 				expect(results).eql(expected)
 			})
 			it('Filter proteins sequences with at least 1 match to CheW domain in pfam28 AND only 1 match to HATPase_c domain in pfam28', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						Npos: [
 							{
@@ -971,7 +1008,7 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 				pfqlService.initRules()
 
 				let results = []
@@ -983,7 +1020,7 @@ describe('Feature Query Language - FQL', function() {
 		})
 		describe('Multiple Rules - OR mode', function() {
 			it('Filter proteins sequences with at least 2 matches to CheW domain in pfam28 OR only 1 match to HATPase_c domain in pfam28', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						Npos: [
 							{
@@ -1029,7 +1066,7 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 				pfqlService.initRules()
 
 				let results = []
@@ -1039,7 +1076,7 @@ describe('Feature Query Language - FQL', function() {
 				expect(results).eql(expected)
 			})
 			it('Filter proteins sequences with at least 2 match to CheW domain in pfam28 OR only 1 match to HATPase_c domain in pfam28 OR only 1 matches to Response_reg in pfam28', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						Npos: [
 							{
@@ -1094,7 +1131,7 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 				pfqlService.initRules()
 
 				let results = []
@@ -1108,7 +1145,7 @@ describe('Feature Query Language - FQL', function() {
 	describe('Positional rules :: ', function() {
 		describe('Simple matches :: ', function() {
 			it('Filter protein sequences starting with 1 match to a CheW domain from Pfam28', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						pos: [
 							{
@@ -1148,7 +1185,7 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 				pfqlService.initRules()
 
 				let results = []
@@ -1158,7 +1195,7 @@ describe('Feature Query Language - FQL', function() {
 				expect(results).eql(expected)
 			})
 			it('Filter protein sequences starting with 2 CheW domains from Pfam28', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						pos: [
 							{
@@ -1199,7 +1236,7 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 				pfqlService.initRules()
 
 				let results = []
@@ -1209,7 +1246,7 @@ describe('Feature Query Language - FQL', function() {
 				expect(results).eql(expected)
 			})
 			it('Filter protein sequences starting with 2 or more CheW domains from Pfam28', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						pos: [
 							{
@@ -1250,7 +1287,7 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 				pfqlService.initRules()
 
 				let results = []
@@ -1260,7 +1297,7 @@ describe('Feature Query Language - FQL', function() {
 				expect(results).eql(expected)
 			})
 			it('Filter protein sequences starting with 1 TM followed by 1 Cache_2 domain from Pfam28', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						pos: [
 							{
@@ -1306,7 +1343,7 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 				pfqlService.initRules()
 
 				let results = []
@@ -1316,7 +1353,7 @@ describe('Feature Query Language - FQL', function() {
 				expect(results).eql(expected)
 			})
 			it('Filter protein sequences starting with 1 TM follow by any 2 feature and another TM', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						pos: [
 							{
@@ -1374,7 +1411,7 @@ describe('Feature Query Language - FQL', function() {
 					[0], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 				pfqlService.initRules()
 
 				let results = []
@@ -1384,7 +1421,7 @@ describe('Feature Query Language - FQL', function() {
 				expect(results).eql(expected)
 			})
 			it('Filter proteins sequences with any number of matches, anywhere in the sequence, to a single domain from pfam28', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						pos: [
 							{
@@ -1420,7 +1457,7 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 
 				pfqlService.initRules()
 
@@ -1431,7 +1468,7 @@ describe('Feature Query Language - FQL', function() {
 				expect(results).eql(expected)
 			})
 			it('Non-positional and positional rules can have the same output', function() {
-				let setOfRulesPos = [
+				let setsOfRulesPos = [
 					{
 						pos: [
 							{
@@ -1441,7 +1478,7 @@ describe('Feature Query Language - FQL', function() {
 						]
 					}
 				]
-				let setOfRulesNonPos = [
+				let setsOfRulesNonPos = [
 					{
 						Npos: [
 							{
@@ -1451,7 +1488,7 @@ describe('Feature Query Language - FQL', function() {
 						]
 					}
 				]
-				let setsOfRules = [setOfRulesPos, setOfRulesNonPos]
+				let query = [setsOfRulesPos, setsOfRulesNonPos]
 				let expected = [
 					[0, 1], // CheW | CheW
 					[0, 1], // CheW | Response_reg
@@ -1478,7 +1515,7 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let pfqlService = new PFQLService(setsOfRules)
+				let pfqlService = new PFQLService(query)
 
 				pfqlService.initRules()
 
@@ -1489,7 +1526,7 @@ describe('Feature Query Language - FQL', function() {
 				expect(results).eql(expected)
 			})
 			it('Don\'t know why doesn\'t work - Two different rules should not give the same output', function() {
-				let setOfRulesPos = [
+				let setsOfRulesPos = [
 					{
 						pos: [
 							{
@@ -1499,7 +1536,7 @@ describe('Feature Query Language - FQL', function() {
 						]
 					}
 				]
-				let setOfRulesNonPos = [
+				let setsOfRulesNonPos = [
 					{
 						Npos: [
 							{
@@ -1509,8 +1546,8 @@ describe('Feature Query Language - FQL', function() {
 						]
 					}
 				]
-				let pfqlServiceP = new PFQLService([setOfRulesPos]),
-					pfqlServiceNP = new PFQLService([setOfRulesNonPos])
+				let pfqlServiceP = new PFQLService([setsOfRulesPos]),
+					pfqlServiceNP = new PFQLService([setsOfRulesNonPos])
 
 
 				pfqlServiceP.initRules()
@@ -1528,7 +1565,7 @@ describe('Feature Query Language - FQL', function() {
 				expect(resultsP).not.eql(resultsNP)
 			})
 			it('Filter protein sequences with 1 match to a CheW domain from Pfam28', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						pos: [
 							{
@@ -1572,7 +1609,7 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 
 				pfqlService.initRules()
 
@@ -1583,7 +1620,7 @@ describe('Feature Query Language - FQL', function() {
 				expect(results).eql(expected)
 			})
 			it('Filter sequences with starts with TM-Cache_1 and end in MCPsignal', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						pos: [
 							{
@@ -1643,7 +1680,7 @@ describe('Feature Query Language - FQL', function() {
 					[0], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 
 				pfqlService.initRules()
 
@@ -1654,7 +1691,7 @@ describe('Feature Query Language - FQL', function() {
 				expect(results).eql(expected)
 			})
 			it('Filter sequences with starts with TM-Cache_1 followed by anything BUT another Cache_1 and end in MCPsignal', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						pos: [
 							{
@@ -1721,7 +1758,7 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 
 				pfqlService.initRules()
 
@@ -1732,7 +1769,7 @@ describe('Feature Query Language - FQL', function() {
 				expect(results).eql(expected)
 			})
 			it('Filter sequences with starts with TM-Cache_2 and end in MCPsignal', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						pos: [
 							{
@@ -1792,7 +1829,7 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[0] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 
 				pfqlService.initRules()
 
@@ -1805,7 +1842,7 @@ describe('Feature Query Language - FQL', function() {
 		})
 		describe('Testing the behaviour of "count" for positional rules :: ', function() {
 			it('Request protein sequences with 2 matches and nothing else to a single domain from pfam28', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						pos: [
 							{
@@ -1850,7 +1887,7 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 
 				pfqlService.initRules()
 
@@ -1861,7 +1898,7 @@ describe('Feature Query Language - FQL', function() {
 				expect(results).eql(expected)
 			})
 			it('Request protein sequences with 3 matches and nothing else to a single domain from pfam28', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						pos: [
 							{
@@ -1906,7 +1943,7 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 
 				pfqlService.initRules()
 
@@ -1917,7 +1954,7 @@ describe('Feature Query Language - FQL', function() {
 				expect(results).eql(expected)
 			})
 			it('Filter protein sequences with 2 or 3 matches and nothing else to a single domain from pfam28', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						pos: [
 							{
@@ -1962,7 +1999,7 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 
 				pfqlService.initRules()
 
@@ -1973,7 +2010,7 @@ describe('Feature Query Language - FQL', function() {
 				expect(results).eql(expected)
 			})
 			it('Request protein sequences with 2 or 3 matches at the end of the sequence to a single domain from pfam28', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						pos: [
 							{
@@ -2014,7 +2051,7 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 
 				pfqlService.initRules()
 
@@ -2025,7 +2062,7 @@ describe('Feature Query Language - FQL', function() {
 				expect(results).eql(expected)
 			})
 			it('Request protein sequences with 2 TM regions anywhere in the sequence with MCPsignal at the end', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						Npos: [
 							{
@@ -2072,7 +2109,7 @@ describe('Feature Query Language - FQL', function() {
 					[0], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[0] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 
 				pfqlService.initRules()
 
@@ -2085,7 +2122,7 @@ describe('Feature Query Language - FQL', function() {
 		})
 		describe('Testing the behaviour of wildcard for positional rules', function() {
 			it('Filter protein sequences with any 2 pfam28 domains', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						pos: [
 							{
@@ -2130,7 +2167,7 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 
 				pfqlService.initRules()
 
@@ -2141,7 +2178,7 @@ describe('Feature Query Language - FQL', function() {
 				expect(results).eql(expected)
 			})
 			it('Filter protein sequences with 1 or more domains between 2 TM regions in the beginning of the sequence and with MCPsignal at the end', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						pos: [
 							{
@@ -2206,7 +2243,7 @@ describe('Feature Query Language - FQL', function() {
 					[0], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[0] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 
 				pfqlService.initRules()
 
@@ -2217,7 +2254,7 @@ describe('Feature Query Language - FQL', function() {
 				expect(results).eql(expected)
 			})
 			it('Filter protein sequences starting with no Cache_1 between two TM and ending a MCPsignal', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						pos: [
 							{
@@ -2289,7 +2326,7 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[0] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 
 				pfqlService.initRules()
 
@@ -2300,7 +2337,7 @@ describe('Feature Query Language - FQL', function() {
 				expect(results).eql(expected)
 			})
 			it('Filter protein sequences starting with TM followed by any two domains from pfam28 but no Cache_1 followed by another TM and ending a MCPsignal', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						pos: [
 							{
@@ -2384,7 +2421,7 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 
 				pfqlService.initRules()
 
@@ -2395,7 +2432,7 @@ describe('Feature Query Language - FQL', function() {
 				expect(results).eql(expected)
 			})
 			it('Filter protein sequences starting with TM followed by any two domains from pfam28 but Cache_1 not in the first of the two followed by another TM and ending a MCPsignal', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						pos: [
 							{
@@ -2472,7 +2509,7 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 
 				pfqlService.initRules()
 
@@ -2483,7 +2520,7 @@ describe('Feature Query Language - FQL', function() {
 				expect(results).eql(expected)
 			})
 			it('Filter sequences that start with TM and end with MCPsignal.', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						pos: [
 							{
@@ -2537,7 +2574,7 @@ describe('Feature Query Language - FQL', function() {
 					[0], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[0] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 
 				pfqlService.initRules()
 
@@ -2548,7 +2585,7 @@ describe('Feature Query Language - FQL', function() {
 				expect(results).eql(expected)
 			})
 			it('Filter protein sequences that starts with at least 3 domains of the PAS family using wildcards "PAS.*"', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						pos: [
 							{
@@ -2589,7 +2626,7 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 
 				pfqlService.initRules()
 
@@ -2604,7 +2641,7 @@ describe('Feature Query Language - FQL', function() {
 	describe('Complex queries', function() {
 		describe('Same position specified in two rules should mean OR', function() {
 			it('Filter sequences with starts with TM-Cache_1 or TM-Cache_2 and end in MCPsignal', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						pos: [
 							{
@@ -2696,7 +2733,7 @@ describe('Feature Query Language - FQL', function() {
 					[0], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[0] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 
 				pfqlService.initRules()
 
@@ -2709,7 +2746,7 @@ describe('Feature Query Language - FQL', function() {
 		})
 		describe('Combining Npos and pos rules', function() {
 			it('Filter protein sequences that starts with TM-Cache1 and ends with MCPsignal but does not have Cache_2 anywhere', function() {
-				let setOfRules = [
+				let setsOfRules = [
 					{
 						pos: [
 							{
@@ -2776,7 +2813,7 @@ describe('Feature Query Language - FQL', function() {
 					[0], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let pfqlService = new PFQLService([setOfRules])
+				let pfqlService = new PFQLService([setsOfRules])
 
 				pfqlService.initRules()
 
@@ -2790,7 +2827,7 @@ describe('Feature Query Language - FQL', function() {
 	})
 	describe('Sets of rules should also work', function() {
 		it('two equal rules must match same entries', function() {
-			let setsOfRules = [
+			let query = [
 				[
 					{
 						pos: [
@@ -2838,7 +2875,7 @@ describe('Feature Query Language - FQL', function() {
 				[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 				[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 			]
-			let pfqlService = new PFQLService(setsOfRules)
+			let pfqlService = new PFQLService(query)
 			let results = []
 			pfqlService.initRules()
 			sampleData.forEach(function(item) {
@@ -2847,7 +2884,7 @@ describe('Feature Query Language - FQL', function() {
 			expect(results).eql(expected)
 		})
 		it('Two different rules matching different entries', function() {
-			let setsOfRules = [
+			let query = [
 				[
 					{
 						pos: [
@@ -2924,7 +2961,7 @@ describe('Feature Query Language - FQL', function() {
 				[1], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 				[1] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 			]
-			let pfqlService = new PFQLService(setsOfRules)
+			let pfqlService = new PFQLService(query)
 
 			let results = []
 			pfqlService.initRules()
@@ -2934,7 +2971,7 @@ describe('Feature Query Language - FQL', function() {
 			expect(results).eql(expected)
 		})
 		it('Overlapping rules matching different entries', function() {
-			let setsOfRules = [
+			let query = [
 				[
 					{
 						pos: [
@@ -3030,7 +3067,7 @@ describe('Feature Query Language - FQL', function() {
 				[1], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 				[1] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 			]
-			let pfqlService = new PFQLService(setsOfRules)
+			let pfqlService = new PFQLService(query)
 
 			let results = []
 			pfqlService.initRules()
@@ -3042,7 +3079,7 @@ describe('Feature Query Language - FQL', function() {
 	})
 	describe('Using multiple resources', function() {
 		it(':: testing pfam28 and smart in the same set', function() {
-			let setsOfRules = [
+			let query = [
 				[
 					{
 						Npos: [
@@ -3088,7 +3125,7 @@ describe('Feature Query Language - FQL', function() {
 				[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 				[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 			]
-			let pfqlService = new PFQLService(setsOfRules)
+			let pfqlService = new PFQLService(query)
 
 			let results = []
 			pfqlService.initRules()
@@ -3098,7 +3135,7 @@ describe('Feature Query Language - FQL', function() {
 			expect(results).eql(expected)
 		})
 		it(':: testing pfam28 and smart in different sets', function() {
-			let setsOfRules = [
+			let query = [
 				[
 					{
 						Npos: [
@@ -3146,7 +3183,7 @@ describe('Feature Query Language - FQL', function() {
 				[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 				[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 			]
-			let pfqlService = new PFQLService(setsOfRules)
+			let pfqlService = new PFQLService(query)
 
 			let results = []
 			pfqlService.initRules()

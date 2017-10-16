@@ -4,7 +4,7 @@ let PFQLCore = require('./PFQLCore.js')
 
 module.exports =
 /**
- * Class of Feature Query Language
+ * Class of Protein Feature Query Language
  *
  * Service to process a given domain
  * architecture and verify its matches
@@ -12,8 +12,8 @@ module.exports =
  *
  * */
 class PFQLService {
-	constructor(setsOfRules = false) {
-		this.setsOfRules = setsOfRules
+	constructor(query = false) {
+		this.query = query
 		this.parsedSetsOfRules = []
 	}
 
@@ -21,11 +21,11 @@ class PFQLService {
 	 * Initiates the Service
 	 */
 	initRules() {
-		if (this.setsOfRules) {
-			this.resources = [...Array(this.setsOfRules.length).keys()].map((i) => [])
-			this.setsOfRules.forEach((setOfRules, ruleIndex) => {
+		if (this.query) {
+			this.resources = [...Array(this.query.length).keys()].map((i) => [])
+			this.query.forEach((setsOfRules, ruleIndex) => {
 				let parsedRules = []
-				setOfRules.forEach((rules) => {
+				setsOfRules.forEach((rules) => {
 					this._isValidRule(rules)
 					parsedRules.push(this._parseRules(rules, ruleIndex))
 				})
