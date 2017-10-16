@@ -1,10 +1,5 @@
-/* eslint-disable no-magic-numbers, no-undefined */
+/* eslint-disable no-magic-numbers, no-undefined, no-unused-expressions */
 'use strict'
-let chai = require('chai')
-let chaiAsPromised = require('chai-as-promised')
-
-chai.use(chaiAsPromised)
-
 let expect = require('chai').expect
 
 let PFQLService = require('./PFQLService.js')
@@ -78,8 +73,8 @@ describe('Feature Query Language - FQL', function() {
 			let info = {
 				t: {
 					das: [
-						["TM", 8, 27, 18, 5.903, 8.666e-7],
-						["TM", 288, 315, 302, 5.835, 1.099e-6]
+						['TM', 8, 27, 18, 5.903, 8.666e-7],
+						['TM', 288, 315, 302, 5.835, 1.099e-6]
 					],
 					pfam28: [
 						['MCPsignal', 460, 658, '..', 34.5, 12, 203, '..', 435, 669, '..', 143.6, 1.3e-44, 3.8e-42, 0.89],
@@ -129,8 +124,8 @@ describe('Feature Query Language - FQL', function() {
 			let info = {
 				t: {
 					das: [
-						["TM", 8, 27, 18, 5.903, 8.666e-7],
-						["TM", 288, 315, 302, 5.835, 1.099e-6]
+						['TM', 8, 27, 18, 5.903, 8.666e-7],
+						['TM', 288, 315, 302, 5.835, 1.099e-6]
 					],
 					pfam28: [
 						['MCPsignal', 460, 658, '..', 34.5, 12, 203, '..', 435, 669, '..', 143.6, 1.3e-44, 3.8e-42, 0.89],
@@ -1523,17 +1518,13 @@ describe('Feature Query Language - FQL', function() {
 				sampleData.slice(0, 1).forEach(function(item) {
 					resultsP.push(pfqlServiceP.findMatches(item))
 				})
-				console.log(resultsP)
 				pfqlServiceNP.initRules()
 
 				let resultsNP = []
-				console.log(sampleData.slice(0, 1))
 				sampleData.slice(0, 1).forEach(function(item) {
 					resultsNP.push(pfqlServiceNP.findMatches(item))
 				})
 
-				console.log(resultsP)
-				console.log(resultsNP)
 				expect(resultsP).not.eql(resultsNP)
 			})
 			it('Filter protein sequences with 1 match to a CheW domain from Pfam28', function() {
@@ -2850,7 +2841,6 @@ describe('Feature Query Language - FQL', function() {
 			let pfqlService = new PFQLService(setsOfRules)
 			let results = []
 			pfqlService.initRules()
-			let promises = []
 			sampleData.forEach(function(item) {
 				results.push(pfqlService.findMatches(item).PFQLMatches)
 			})
@@ -2938,7 +2928,6 @@ describe('Feature Query Language - FQL', function() {
 
 			let results = []
 			pfqlService.initRules()
-			let promises = []
 			sampleData.forEach(function(item) {
 				results.push(pfqlService.findMatches(item).PFQLMatches)
 			})
@@ -3045,7 +3034,6 @@ describe('Feature Query Language - FQL', function() {
 
 			let results = []
 			pfqlService.initRules()
-			let promises = []
 			sampleData.forEach(function(item) {
 				results.push(pfqlService.findMatches(item).PFQLMatches)
 			})
@@ -3104,7 +3092,6 @@ describe('Feature Query Language - FQL', function() {
 
 			let results = []
 			pfqlService.initRules()
-			let promises = []
 			sampleData.forEach(function(item) {
 				results.push(pfqlService.findMatches(item).PFQLMatches)
 			})
@@ -3163,7 +3150,6 @@ describe('Feature Query Language - FQL', function() {
 
 			let results = []
 			pfqlService.initRules()
-			let promises = []
 			sampleData.forEach(function(item) {
 				results.push(pfqlService.findMatches(item).PFQLMatches)
 			})

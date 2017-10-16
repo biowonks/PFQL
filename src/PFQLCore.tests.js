@@ -2,9 +2,9 @@
 'use strict'
 let expect = require('chai').expect
 
-let RuleFql = require('./PFQLCore.js')
+let PFQLCore = require('./PFQLCore.js')
 
-describe('Class RuleFql ::', function() {
+describe('Class PFQLCore ::', function() {
 	describe('Initializing the class', () => {
 		it('Correct format should load just fine', () => {
 			let rule = {
@@ -38,7 +38,7 @@ describe('Class RuleFql ::', function() {
 				highNumMatches: [],
 				isOk: true
 			}
-			let ruleFql = new RuleFql(rule)
+			let ruleFql = new PFQLCore(rule)
 			expect(ruleFql).eql(result)
 		})
 		it('Rules with no instructions should also load properly', () => {
@@ -55,7 +55,7 @@ describe('Class RuleFql ::', function() {
 				highNumMatches: [],
 				isOk: true
 			}
-			let ruleFql = new RuleFql(rule)
+			let ruleFql = new PFQLCore(rule)
 			expect(ruleFql).eql(result)
 		})
 		it('Empty rule should also load ok but pass "undefined" for position', () => {
@@ -69,12 +69,12 @@ describe('Class RuleFql ::', function() {
 				highNumMatches: [],
 				isOk: true
 			}
-			let ruleFql = new RuleFql(rule)
+			let ruleFql = new PFQLCore(rule)
 			expect(ruleFql).eql(result)
 		})
 	})
 	describe('check behaviour of _commonMatches ::', () => {
-		let ruleFql = new RuleFql()
+		let ruleFql = new PFQLCore()
 		it('with empty match', () => {
 			let matchArchive = []
 			let common = []
@@ -133,7 +133,7 @@ describe('Class RuleFql ::', function() {
 			expect(ruleFql._findCommonMatches(matchArchive)).eql(common)
 		})
 	})
-	describe.skip('RuleFql methods', () => {
+	describe.skip('PFQLCore methods', () => {
 		describe('check behaviour of findMatches ::', () => {
 			it('')
 		})

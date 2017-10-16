@@ -18,12 +18,7 @@ class PFQLService {
 	}
 
 	/**
-	 * Load and parse the set of rules passed by the user in FQL standards.
-	 * The keys of the object that will be interpreted are two: Npos and pos. Everything else will be ignored.
-	 * Example of rule:
-	 * Find if certain rule will match the expression. (NEED TEST)
-	 * @param {Array.Objects} - Raw set of rules object
-	 * @return {Boolean} - True if no problems occur.
+	 * Initiates the Service
 	 */
 	initRules() {
 		if (this.setsOfRules) {
@@ -98,105 +93,70 @@ class PFQLService {
 		let indexLastMatch = NaN,
 			isOk = true
 
-		// console.log('_testPos :: ' + '-------------------------------------------------------------------------------------------------')
-		// console.log('_testPos :: ' + ' This is the data: ' + JSON.stringify(arrayInfo))
-		// console.log('_testPos :: ' + JSON.stringify(parsedRules))
-
 		for (let i = 0; i < parsedRules.rules.length; i++) { // check each rule
 			let currRule = new PFQLCore({instructions: parsedRules.rules[i], pos: i}),
 				nextRule = new PFQLCore({instructions: parsedRules.rules[i + 1], pos: i + 1}),
 				classifiedMatches = {hard: [], soft: [], next: []}
 
-			// console.log('_testPos :: ' + 'Rule -> ' + JSON.stringify(currRule))
-
-
 			currRule.findMatches(arrayInfo, indexLastMatch)
 			isOk = currRule.isOk
-
-			// console.log('_testPos :: ' + 'Common matches - ' + JSON.stringify(currRule.matches))
-			// console.log('_testPos :: ' + 'lastmatch: ' + indexLastMatch)
-			// console.log('_testPos :: ' + 'not consecutive match: ' + (currRule.matches[0] - 1 !== indexLastMatch))
 
 			if (indexLastMatch && (currRule.matches[0] - 1 !== indexLastMatch))
 				isOk = false
 
 			if (nextRule.instructions && currRule.matches.length !== 0) {
-				// console.log('_testPos :: ' + ' ----- NEXT RULE -----')
 				if (isNaN(indexLastMatch))
 					nextRule.findMatches(arrayInfo, 0)
 				else
 					nextRule.findMatches(arrayInfo, indexLastMatch + 1)
-				// console.log('_testPos :: ' + 'Next Rule - Common matches - ' + JSON.stringify(nextRule.matches))
-				// console.log('_testPos :: ' + 'Next Rule - not consecutive match: ' + (nextRule.matches[0] - 1 !== currRule.matches[currRule.matches.length - 1]))
 
 				classifiedMatches = this._classifyMatches(currRule, nextRule)
 
-				// console.log('_testPos :: ' + ' Classifying matches: ' + JSON.stringify(classifiedMatches))
 
 				let foundMatch = false
 
 				for (let j = 0; j < classifiedMatches.soft.length + 1; j++) {
 					currRule.isOk = true
-					// console.log('_testPos :: matches to curr rule : ' + JSON.stringify(classifiedMatches.hard.concat(classifiedMatches.soft.slice(0, j))))
-					// console.log('_testPos :: matches to next rule : ' + JSON.stringify(classifiedMatches.soft.slice(j, classifiedMatches.soft.length).concat(classifiedMatches.next)))
 					currRule.matches = classifiedMatches.hard.concat(classifiedMatches.soft.slice(0, j))
 					nextRule.matches = classifiedMatches.soft.slice(j, classifiedMatches.soft.length).concat(classifiedMatches.next)
 
-					// console.log('_testPos :: ' + 'Current rule -> ' + JSON.stringify(currRule))
-					// console.log('_testPos :: ' + 'Next Rule -> ' + JSON.stringify(nextRule))
 
 					if (currRule.pos === 0) {
-						// console.log('_testPos :: ' + 'Testing first rule')
 						currRule.checkFirstRule(parsedRules.hardStart)
 						// nextRule.checkFirstRule(parsedRules.hardStart)
 					}
 					else {
-						// console.log('_testPos :: ' + 'Testing the other rules')
 						currRule.checkNumMatches()
 						nextRule.checkNumMatches(false)
 					}
-					// console.log('_testPos :: ' + 'Current rule -> ' + JSON.stringify(currRule))
-					// console.log('_testPos :: ' + 'Next Rule -> ' + JSON.stringify(nextRule))
 					if (currRule.isOk && nextRule.isOk) {
 						// indexLastMatch = currRule.matches[currRule.matches.length - 1]
-						// //// console.log('_testPos :: ' + 'lastmatch: ' + indexLastMatch)
 						foundMatch = true
 						break
 					}
 				}
 				if (foundMatch)
 					isOk = true
-				// console.log('_testPos :: ' + ' ----- END of NEXT RULE -----')
 			}
 
-			// console.log('_testPos :: ' + 'New common matches after next rule: ' + JSON.stringify(currRule.matches))
 
-			// console.log('_testPos :: ' + ' Now, let\'s make the test about the number of matches of the special first rule')
-			// console.log('_testPos :: ' + 'Rule -> ' + JSON.stringify(currRule))
 			if (!(currRule.checkFirstRule(parsedRules.hardStart))) {
 				isOk = currRule.isOk
 				break
 			}
 
-			// console.log('_testPos :: ' + ' And check if the number of matches are within the interval')
 			if (!(currRule.checkNumMatches())) {
 				isOk = currRule.isOk
 				break
 			}
 
 			if (!(isNaN(indexLastMatch))) {
-				// console.log('_testPos :: ' + ' is still ok? : ' + isOk)
-				// console.log('_testPos :: ' + ' final match : ' + currRule.matches[0])
-				// console.log('_testPos :: ' + ' last index : ' + indexLastMatch)
 				if (isOk === false || currRule.matches === [] || currRule.matches[0] - 1 !== indexLastMatch) {
-					// console.log('_testPos :: ' + ' False by having no consecutive match')
 					isOk = false
 					break
 				}
 			}
-			// console.log('_testPos :: ' + 'List of matches: ' + JSON.stringify(currRule.matches))
 			indexLastMatch = currRule.matches[currRule.matches.length - 1]
-			// console.log('_testPos :: ' + 'New last match: ' + indexLastMatch)
 			if (parsedRules.hardStop === true && i === parsedRules.rules.length - 1) {
 				if (indexLastMatch !== arrayInfo.length - 1)
 					isOk = false
@@ -205,7 +165,6 @@ class PFQLService {
 			if (isOk === false)
 				break
 		}
-		// console.log('_testPos :: ' + 'FINAL = ' + isOk)
 		return isOk
 	}
 
@@ -254,7 +213,8 @@ class PFQLService {
 
 	/**
 	 * Add resource from rule to the array of resource used
-	 * @param {string} resource - identifier of the resource
+	 * @param {string} resource
+	 * @param {int} ruleIndex
 	 * @returns {null}
 	 */
 	_addResources(resource, ruleIndex) {
@@ -266,6 +226,7 @@ class PFQLService {
 	/**
 	 * Parse filtering rules passed by the user
 	 * @param {Object} rules - Raw rules object passed to FQL
+	 * @param {int} ruleIndex
 	 * @returns {Object} parsed - Same object but with the rules parsed
 	 */
 	_parseRules(rules, ruleIndex) {
@@ -279,6 +240,7 @@ class PFQLService {
 	/**
 	 * Parse pos type of rules. It will also populate the this.resources with the resources found here.
 	 * @param {Object} rules - Rule of Npos type object
+	 * @param {int} ruleIndex
 	 * @returns {Array.<Array>} regex - Array of [ String to match the domain architecture of sequences, string of interval of how many times it should appear ].
 	 */
 	_parseNPosRules(rules, ruleIndex) {
@@ -305,6 +267,7 @@ class PFQLService {
 	/**
 	 * Parse pos type of rules.
 	 * @param {Object} rules - Rule type obejct
+	 * @param {int} ruleIndex
 	 * @returns {Object} Object with instructions for positional matching. There are three values:
 	 * 	hardStart {Boolean} - true if matters that first rule match first info.
 	 * rules {Object} - Array with rules
@@ -358,6 +321,7 @@ class PFQLService {
 	 * @param {Object} rule - Instruction to be parsed.
 	 * @param {number} i - index of the rule
 	 * @param {number} L - number of rules.
+	 * @param {int} ruleIndex
 	 * @returns {Object.Array|string} Parsed rule or
  	 */
 	_parseThePosInstruction(rule, i, L, ruleIndex) {
@@ -411,6 +375,7 @@ class PFQLService {
 	/**
 	 * Parse SeqDepot type of domain architecture response.
 	 * @param {string} info - SeqDepot-formated feature information
+	 * @param {int} ruleIndex
 	 * @returns {Object} Returns an array with features information formated as: feature@resource
 	 */
 	_processFeaturesInfo(info, ruleIndex) {

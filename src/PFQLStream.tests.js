@@ -2,8 +2,7 @@
 'use strict'
 let expect = require('chai').expect
 
-let fs = require('fs'),
-	Stream = require('stream'),
+let Stream = require('stream'),
 	PFQLStream = require('./PFQLStream.js')
 
 let sampleData = require('../test-data/PFQL-sample-input.json') // , {highWaterMark: 3 * 64 }),
@@ -71,7 +70,6 @@ describe('PFQLStream test suit ::', function() {
 			})
 			.on('end', function() {
 				expect(listOfData).eql(expected)
-				done()
 			})
 	})
 })
