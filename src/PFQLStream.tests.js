@@ -4,11 +4,11 @@ let expect = require('chai').expect
 
 let fs = require('fs'),
 	Stream = require('stream'),
-	FQLStream = require('./FQLStream.js')
+	PFQLStream = require('./PFQLStream.js')
 
-let sampleData = require('../test-data/FQL-sample-input.json') // , {highWaterMark: 3 * 64 }),
+let sampleData = require('../test-data/PFQL-sample-input.json') // , {highWaterMark: 3 * 64 }),
 
-describe('FQLStream test suit ::', function() {
+describe('PFQLStream test suit ::', function() {
 	it('has to work using stream', function() {
 		let readable = new Stream.Readable({objectMode: true})
 		sampleData.forEach((item) => {
@@ -63,9 +63,9 @@ describe('FQLStream test suit ::', function() {
 
 		let listOfData = []
 
-		let fqlStream = new FQLStream(setOfRules)
-		fqlStream.progressReportNumber = 1
-		readable.pipe(fqlStream)
+		let pfqlStream = new PFQLStream(setOfRules)
+		pfqlStream.progressReportNumber = 1
+		readable.pipe(pfqlStream)
 			.on('data', function(item) {
 				listOfData.push(item.FQLMatches)
 			})

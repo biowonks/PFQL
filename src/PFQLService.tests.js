@@ -7,50 +7,50 @@ chai.use(chaiAsPromised)
 
 let expect = require('chai').expect
 
-let FQLService = require('./FQLService.js')
-let sampleData = require('../test-data/FQL-sample-input.json')
+let PFQLService = require('./PFQLService.js')
+let sampleData = require('../test-data/PFQL-sample-input.json')
 
 describe('Feature Query Language - FQL', function() {
 	describe('Sanity checks', function() {
 		it('If no rules are passed, it should fail', function() {
-			let	fqlService = new FQLService()
-			expect(fqlService.initRules.bind(fqlService)).to.throw('No rules have been passed in the constructor')
+			let	pfqlService = new PFQLService()
+			expect(pfqlService.initRules.bind(pfqlService)).to.throw('No rules have been passed in the constructor')
 		})
 	})
 	describe('Nuts and bolts ::', function() {
 		it('check behaviour _addResources with two ruleIndex', function() {
-			let	fqlService = new FQLService([[], []])
-			fqlService.initRules()
+			let	pfqlService = new PFQLService([[], []])
+			pfqlService.initRules()
 			let rc = 'pfam28'
-			fqlService._addResources(rc, 0)
-			fqlService._addResources(rc, 1)
-			expect(fqlService.resources).eql([['pfam28'], ['pfam28']])
+			pfqlService._addResources(rc, 0)
+			pfqlService._addResources(rc, 1)
+			expect(pfqlService.resources).eql([['pfam28'], ['pfam28']])
 		})
 		it('check behaviour _addResources with single ruleIndex and adding same resource twice', function() {
-			let	fqlService = new FQLService([[]])
-			fqlService.initRules()
+			let	pfqlService = new PFQLService([[]])
+			pfqlService.initRules()
 			let rc = 'pfam28'
-			fqlService._addResources(rc, 0)
-			fqlService._addResources(rc, 0)
+			pfqlService._addResources(rc, 0)
+			pfqlService._addResources(rc, 0)
 			rc = 'das'
-			fqlService._addResources(rc, 0)
-			fqlService._addResources(rc, 0)
-			expect(fqlService.resources).eql([['pfam28', 'das']])
+			pfqlService._addResources(rc, 0)
+			pfqlService._addResources(rc, 0)
+			expect(pfqlService.resources).eql([['pfam28', 'das']])
 		})
 		it('check behaviour _addResources with two ruleIndex and adding same resource twice', function() {
-			let	fqlService = new FQLService([[], []])
-			fqlService.initRules()
+			let	pfqlService = new PFQLService([[], []])
+			pfqlService.initRules()
 			let rc = 'pfam28'
-			fqlService._addResources(rc, 0)
-			fqlService._addResources(rc, 1)
-			fqlService._addResources(rc, 0)
-			fqlService._addResources(rc, 1)
+			pfqlService._addResources(rc, 0)
+			pfqlService._addResources(rc, 1)
+			pfqlService._addResources(rc, 0)
+			pfqlService._addResources(rc, 1)
 			rc = 'das'
-			fqlService._addResources(rc, 0)
-			fqlService._addResources(rc, 1)
-			fqlService._addResources(rc, 0)
-			fqlService._addResources(rc, 1)
-			expect(fqlService.resources).eql([['pfam28', 'das'], ['pfam28', 'das']])
+			pfqlService._addResources(rc, 0)
+			pfqlService._addResources(rc, 1)
+			pfqlService._addResources(rc, 0)
+			pfqlService._addResources(rc, 1)
+			expect(pfqlService.resources).eql([['pfam28', 'das'], ['pfam28', 'das']])
 		})
 		it('check behaviour _processFeaturesInfo', function() {
 			let setOfRules = [
@@ -73,8 +73,8 @@ describe('Feature Query Language - FQL', function() {
 					]
 				}
 			]
-			let	fqlService = new FQLService([setOfRules])
-			fqlService.initRules()
+			let	pfqlService = new PFQLService([setOfRules])
+			pfqlService.initRules()
 			let info = {
 				t: {
 					das: [
@@ -88,7 +88,7 @@ describe('Feature Query Language - FQL', function() {
 					]
 				}
 			}
-			let expression = fqlService._processFeaturesInfo(info, 0)
+			let expression = pfqlService._processFeaturesInfo(info, 0)
 			expect(expression).eql(
 				[
 					'TM@das',
@@ -124,8 +124,8 @@ describe('Feature Query Language - FQL', function() {
 					]
 				}
 			]
-			let	fqlService = new FQLService([setOfRules])
-			fqlService.initRules()
+			let	pfqlService = new PFQLService([setOfRules])
+			pfqlService.initRules()
 			let info = {
 				t: {
 					das: [
@@ -139,7 +139,7 @@ describe('Feature Query Language - FQL', function() {
 					]
 				}
 			}
-			let expression = fqlService._processFeaturesInfo(info, 0)
+			let expression = pfqlService._processFeaturesInfo(info, 0)
 			expect(expression).eql(
 				[
 					'TM@das',
@@ -162,10 +162,10 @@ describe('Feature Query Language - FQL', function() {
 						]
 					}
 				]
-				let	fqlService = new FQLService([setOfRules])
-				fqlService.initRules()
-				expect(fqlService.parsedSetsOfRules[0][0].pos).to.be.null
-				expect(fqlService.parsedSetsOfRules[0][0].Npos).to.not.be.null
+				let	pfqlService = new PFQLService([setOfRules])
+				pfqlService.initRules()
+				expect(pfqlService.parsedSetsOfRules[0][0].pos).to.be.null
+				expect(pfqlService.parsedSetsOfRules[0][0].Npos).to.not.be.null
 			})
 			it('with missing Npos', function() {
 				let setOfRules = [
@@ -178,17 +178,17 @@ describe('Feature Query Language - FQL', function() {
 						]
 					}
 				]
-				let	fqlService = new FQLService([setOfRules])
-				fqlService.initRules()
-				expect(fqlService.parsedSetsOfRules[0][0].pos).to.not.be.null
-				expect(fqlService.parsedSetsOfRules[0][0].Npos).to.be.null
+				let	pfqlService = new PFQLService([setOfRules])
+				pfqlService.initRules()
+				expect(pfqlService.parsedSetsOfRules[0][0].pos).to.not.be.null
+				expect(pfqlService.parsedSetsOfRules[0][0].Npos).to.be.null
 			})
 			it('with missing Npos and pos', function() {
 				let setOfRules = [{}]
-				let	fqlService = new FQLService([setOfRules])
-				fqlService.initRules()
-				expect(fqlService.parsedSetsOfRules[0][0].pos).to.be.null
-				expect(fqlService.parsedSetsOfRules[0][0].Npos).to.be.null
+				let	pfqlService = new PFQLService([setOfRules])
+				pfqlService.initRules()
+				expect(pfqlService.parsedSetsOfRules[0][0].pos).to.be.null
+				expect(pfqlService.parsedSetsOfRules[0][0].Npos).to.be.null
 			})
 			it('with pos and Npos', function() {
 				let rules =
@@ -230,9 +230,9 @@ describe('Feature Query Language - FQL', function() {
 						]
 					]
 				}
-				let	fqlService = new FQLService([[rules]])
-				fqlService.initRules()
-				let parsed = fqlService._parseRules(rules, 0)
+				let	pfqlService = new PFQLService([[rules]])
+				pfqlService.initRules()
+				let parsed = pfqlService._parseRules(rules, 0)
 				expect(parsed).eql(expected)
 			})
 			it('with `AND` type of pos rules', function() {
@@ -284,9 +284,9 @@ describe('Feature Query Language - FQL', function() {
 						]
 					]
 				}
-				let	fqlService = new FQLService([[rules]])
-				fqlService.initRules()
-				let parsed = fqlService._parseRules(rules, 0)
+				let	pfqlService = new PFQLService([[rules]])
+				pfqlService.initRules()
+				let parsed = pfqlService._parseRules(rules, 0)
 				expect(parsed).eql(expected)
 			})
 			it('with `^` and `$` fql instructions in pos rules', function() {
@@ -319,57 +319,57 @@ describe('Feature Query Language - FQL', function() {
 					},
 					Npos: null
 				}
-				let	fqlService = new FQLService([[rules]])
-				fqlService.initRules()
-				let parsed = fqlService._parseRules(rules, 0)
+				let	pfqlService = new PFQLService([[rules]])
+				pfqlService.initRules()
+				let parsed = pfqlService._parseRules(rules, 0)
 				expect(parsed).eql(expected)
 			})
 		})
 		describe('Checking behaviour of _parseCount', function() {
 			it('Too many commas', function() {
 				let countInfo = '{1,2,3}'
-				let fqlService = new FQLService([[]])
-				fqlService.initRules()
-				expect(fqlService._parseCount.bind(fqlService, countInfo)).to.throw('Invalid count value (too many commas): ' + countInfo)
+				let pfqlService = new PFQLService([[]])
+				pfqlService.initRules()
+				expect(pfqlService._parseCount.bind(pfqlService, countInfo)).to.throw('Invalid count value (too many commas): ' + countInfo)
 			})
 			it('It must be an integer 1', function() {
 				let countInfo = '{1,a}'
-				let fqlService = new FQLService([[]])
-				fqlService.initRules()
-				expect(fqlService._parseCount.bind(fqlService, countInfo)).to.throw('Invalid count value (only integers): ' + countInfo)
+				let pfqlService = new PFQLService([[]])
+				pfqlService.initRules()
+				expect(pfqlService._parseCount.bind(pfqlService, countInfo)).to.throw('Invalid count value (only integers): ' + countInfo)
 			})
 			it('It must be an integer 2', function() {
 				let countInfo = '{1,2.3}'
-				let fqlService = new FQLService([[]])
-				fqlService.initRules()
-				expect(fqlService._parseCount.bind(fqlService, countInfo)).to.throw('Invalid count value (only integers): ' + countInfo)
+				let pfqlService = new PFQLService([[]])
+				pfqlService.initRules()
+				expect(pfqlService._parseCount.bind(pfqlService, countInfo)).to.throw('Invalid count value (only integers): ' + countInfo)
 			})
 			it('It must work with single number', function() {
-				let fqlService = new FQLService([[]])
-				fqlService.initRules()
+				let pfqlService = new PFQLService([[]])
+				pfqlService.initRules()
 				let countInfo = '{7}',
-					parsed = fqlService._parseCount(countInfo)
+					parsed = pfqlService._parseCount(countInfo)
 				expect(parsed).eql([7, 7])
 			})
 			it('It must work with two numbers', function() {
-				let fqlService = new FQLService([[]])
-				fqlService.initRules()
+				let pfqlService = new PFQLService([[]])
+				pfqlService.initRules()
 				let countInfo = '{1,7}',
-					parsed = fqlService._parseCount(countInfo)
+					parsed = pfqlService._parseCount(countInfo)
 				expect(parsed).eql([1, 7])
 			})
 			it('It must work with no number in the first place', function() {
-				let fqlService = new FQLService([[]])
-				fqlService.initRules()
+				let pfqlService = new PFQLService([[]])
+				pfqlService.initRules()
 				let countInfo = '{,7}',
-					parsed = fqlService._parseCount(countInfo)
+					parsed = pfqlService._parseCount(countInfo)
 				expect(parsed).eql([0, 7])
 			})
 			it('It must work with no number in the second place', function() {
-				let fqlService = new FQLService([[]])
-				fqlService.initRules()
+				let pfqlService = new PFQLService([[]])
+				pfqlService.initRules()
 				let countInfo = '{1,}',
-					parsed = fqlService._parseCount(countInfo)
+					parsed = pfqlService._parseCount(countInfo)
 				expect(parsed).eql([1, Infinity])
 			})
 		})
@@ -382,8 +382,8 @@ describe('Feature Query Language - FQL', function() {
 					feature: 'CheW'
 				}
 			]
-			let	fqlService = new FQLService([simpleRule])
-			expect(fqlService.setsOfRules).eql([simpleRule])
+			let	pfqlService = new PFQLService([simpleRule])
+			expect(pfqlService.setsOfRules).eql([simpleRule])
 		})
 		it('After initRules, all resources used in rules should appear in .resources', function() {
 			let setOfRules = [
@@ -404,10 +404,10 @@ describe('Feature Query Language - FQL', function() {
 					]
 				}
 			]
-			let	fqlService = new FQLService([setOfRules])
-			fqlService.initRules(setOfRules)
+			let	pfqlService = new PFQLService([setOfRules])
+			pfqlService.initRules(setOfRules)
 			let expected = ['pfam29', 'das']
-			expect(fqlService.resources).eql([expected])
+			expect(pfqlService.resources).eql([expected])
 		})
 		describe('Missing pos or Npos in arguments should pass pos and Npos null rules', function() {
 			it('Missing pos should pass undefined for rules.pos', function() {
@@ -421,9 +421,9 @@ describe('Feature Query Language - FQL', function() {
 						]
 					}
 				]
-				let	fqlService = new FQLService([setOfRules])
-				fqlService.initRules()
-				expect(fqlService.setsOfRules[0].pos).to.be.undefined
+				let	pfqlService = new PFQLService([setOfRules])
+				pfqlService.initRules()
+				expect(pfqlService.setsOfRules[0].pos).to.be.undefined
 			})
 		})
 		describe('Checking the integrity of rules - should throw informative Errors', function() {
@@ -445,8 +445,8 @@ describe('Feature Query Language - FQL', function() {
 						]
 					}
 				]
-				let fqlService = new FQLService([setOfRules])
-				expect(fqlService.initRules.bind(fqlService)).to.throw('Each pos rule must explicitly define a resource: \n{"feature":"Response_reg"}')
+				let pfqlService = new PFQLService([setOfRules])
+				expect(pfqlService.initRules.bind(pfqlService)).to.throw('Each pos rule must explicitly define a resource: \n{"feature":"Response_reg"}')
 			})
 			it('Missing mandatory field in pos type rule feature should throw Error', function() {
 				let setOfRules = [
@@ -466,8 +466,8 @@ describe('Feature Query Language - FQL', function() {
 						]
 					}
 				]
-				let fqlService = new FQLService([setOfRules])
-				expect(fqlService.initRules.bind(fqlService)).to.throw('Each pos rule must explicitly define a feature: \n{"resource":"pfam29"}')
+				let pfqlService = new PFQLService([setOfRules])
+				expect(pfqlService.initRules.bind(pfqlService)).to.throw('Each pos rule must explicitly define a feature: \n{"resource":"pfam29"}')
 			})
 			it('Missing both mandatory fields in pos type rule resource and feature should throw Error', function() {
 				let setOfRules = [
@@ -486,8 +486,8 @@ describe('Feature Query Language - FQL', function() {
 						]
 					}
 				]
-				let fqlService = new FQLService([setOfRules])
-				expect(fqlService.initRules.bind(fqlService)).to.throw('Each pos rule must explicitly define a resource and feature: \n{}')
+				let pfqlService = new PFQLService([setOfRules])
+				expect(pfqlService.initRules.bind(pfqlService)).to.throw('Each pos rule must explicitly define a resource and feature: \n{}')
 			})
 			it('Missing mandatory field in Npos type rule resource should throw Error', function() {
 				let setOfRules = [
@@ -507,8 +507,8 @@ describe('Feature Query Language - FQL', function() {
 						]
 					}
 				]
-				let fqlService = new FQLService([setOfRules])
-				expect(fqlService.initRules.bind(fqlService)).to.throw('Each Npos rule must explicitly define a resource: \n{"feature":"Response_reg"}')
+				let pfqlService = new PFQLService([setOfRules])
+				expect(pfqlService.initRules.bind(pfqlService)).to.throw('Each Npos rule must explicitly define a resource: \n{"feature":"Response_reg"}')
 			})
 			it('Missing mandatory field in Npos type rule feature should throw Error', function() {
 				let setOfRules = [
@@ -528,8 +528,8 @@ describe('Feature Query Language - FQL', function() {
 						]
 					}
 				]
-				let fqlService = new FQLService([setOfRules])
-				expect(fqlService.initRules.bind(fqlService)).to.throw('Each Npos rule must explicitly define a feature: \n{"resource":"pfam29"}')
+				let pfqlService = new PFQLService([setOfRules])
+				expect(pfqlService.initRules.bind(pfqlService)).to.throw('Each Npos rule must explicitly define a feature: \n{"resource":"pfam29"}')
 			})
 			it('Missing both mandatory fields in Npos type rule resource and feature should throw Error', function() {
 				let setOfRules = [
@@ -548,8 +548,8 @@ describe('Feature Query Language - FQL', function() {
 						]
 					}
 				]
-				let fqlService = new FQLService([setOfRules])
-				expect(fqlService.initRules.bind(fqlService)).to.throw('Each Npos rule must explicitly define a resource and feature: \n{}')
+				let pfqlService = new PFQLService([setOfRules])
+				expect(pfqlService.initRules.bind(pfqlService)).to.throw('Each Npos rule must explicitly define a resource and feature: \n{}')
 			})
 			it('Wrong wild card "*" instead of ".*" in positional rules', function() {
 				let setOfRules = [
@@ -571,8 +571,8 @@ describe('Feature Query Language - FQL', function() {
 						]
 					}
 				]
-				let fqlService = new FQLService([setOfRules])
-				expect(fqlService.initRules.bind(fqlService)).to.throw('Wrong wild card. Change "*" to ".*" in:\n{"resource":"pfam28","feature":"*","count":"{2}"}')
+				let pfqlService = new PFQLService([setOfRules])
+				expect(pfqlService.initRules.bind(pfqlService)).to.throw('Wrong wild card. Change "*" to ".*" in:\n{"resource":"pfam28","feature":"*","count":"{2}"}')
 			})
 			it('Wrong wild card "*" instead of ".*" in non-positional rules', function() {
 				let setOfRules = [
@@ -586,8 +586,8 @@ describe('Feature Query Language - FQL', function() {
 						]
 					}
 				]
-				let fqlService = new FQLService([setOfRules])
-				expect(fqlService.initRules.bind(fqlService)).to.throw('Wrong wild card. Change "*" to ".*" in:\n{"resource":"pfam28","feature":"*","count":"{2}"}')
+				let pfqlService = new PFQLService([setOfRules])
+				expect(pfqlService.initRules.bind(pfqlService)).to.throw('Wrong wild card. Change "*" to ".*" in:\n{"resource":"pfam28","feature":"*","count":"{2}"}')
 			})
 		})
 	})
@@ -630,12 +630,12 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let fqlService = new FQLService([setOfRules])
-				fqlService.initRules()
+				let pfqlService = new PFQLService([setOfRules])
+				pfqlService.initRules()
 
 				let results = []
 				sampleData.forEach(function(item) {
-					results.push(fqlService.findMatches(item).FQLMatches)
+					results.push(pfqlService.findMatches(item).PFQLMatches)
 				})
 				expect(results).eql(expected)
 			})
@@ -677,12 +677,12 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let fqlService = new FQLService([setOfRules])
-				fqlService.initRules()
+				let pfqlService = new PFQLService([setOfRules])
+				pfqlService.initRules()
 
 				let results = []
 				sampleData.forEach(function(item) {
-					results.push(fqlService.findMatches(item).FQLMatches)
+					results.push(pfqlService.findMatches(item).PFQLMatches)
 				})
 				expect(results).eql(expected)
 			})
@@ -724,12 +724,12 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let fqlService = new FQLService([setOfRules])
-				fqlService.initRules()
+				let pfqlService = new PFQLService([setOfRules])
+				pfqlService.initRules()
 
 				let results = []
 				sampleData.forEach(function(item) {
-					results.push(fqlService.findMatches(item).FQLMatches)
+					results.push(pfqlService.findMatches(item).PFQLMatches)
 				})
 				expect(results).eql(expected)
 			})
@@ -771,12 +771,12 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let fqlService = new FQLService([setOfRules])
-				fqlService.initRules()
+				let pfqlService = new PFQLService([setOfRules])
+				pfqlService.initRules()
 
 				let results = []
 				sampleData.forEach(function(item) {
-					results.push(fqlService.findMatches(item).FQLMatches)
+					results.push(pfqlService.findMatches(item).PFQLMatches)
 				})
 				expect(results).eql(expected)
 			})
@@ -818,12 +818,12 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let fqlService = new FQLService([setOfRules])
-				fqlService.initRules()
+				let pfqlService = new PFQLService([setOfRules])
+				pfqlService.initRules()
 
 				let results = []
 				sampleData.forEach(function(item) {
-					results.push(fqlService.findMatches(item).FQLMatches)
+					results.push(pfqlService.findMatches(item).PFQLMatches)
 				})
 				expect(results).eql(expected)
 			})
@@ -865,12 +865,12 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let fqlService = new FQLService([setOfRules])
-				fqlService.initRules()
+				let pfqlService = new PFQLService([setOfRules])
+				pfqlService.initRules()
 
 				let results = []
 				sampleData.forEach(function(item) {
-					results.push(fqlService.findMatches(item).FQLMatches)
+					results.push(pfqlService.findMatches(item).PFQLMatches)
 				})
 				expect(results).eql(expected)
 			})
@@ -919,12 +919,12 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let fqlService = new FQLService([setOfRules])
-				fqlService.initRules()
+				let pfqlService = new PFQLService([setOfRules])
+				pfqlService.initRules()
 
 				let results = []
 				sampleData.forEach(function(item) {
-					results.push(fqlService.findMatches(item).FQLMatches)
+					results.push(pfqlService.findMatches(item).PFQLMatches)
 				})
 				expect(results).eql(expected)
 			})
@@ -976,12 +976,12 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let fqlService = new FQLService([setOfRules])
-				fqlService.initRules()
+				let pfqlService = new PFQLService([setOfRules])
+				pfqlService.initRules()
 
 				let results = []
 				sampleData.forEach(function(item) {
-					results.push(fqlService.findMatches(item).FQLMatches)
+					results.push(pfqlService.findMatches(item).PFQLMatches)
 				})
 				expect(results).eql(expected)
 			})
@@ -1034,12 +1034,12 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let fqlService = new FQLService([setOfRules])
-				fqlService.initRules()
+				let pfqlService = new PFQLService([setOfRules])
+				pfqlService.initRules()
 
 				let results = []
 				sampleData.forEach(function(item) {
-					results.push(fqlService.findMatches(item).FQLMatches)
+					results.push(pfqlService.findMatches(item).PFQLMatches)
 				})
 				expect(results).eql(expected)
 			})
@@ -1099,12 +1099,12 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let fqlService = new FQLService([setOfRules])
-				fqlService.initRules()
+				let pfqlService = new PFQLService([setOfRules])
+				pfqlService.initRules()
 
 				let results = []
 				sampleData.forEach(function(item) {
-					results.push(fqlService.findMatches(item).FQLMatches)
+					results.push(pfqlService.findMatches(item).PFQLMatches)
 				})
 				expect(results).eql(expected)
 			})
@@ -1153,12 +1153,12 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let fqlService = new FQLService([setOfRules])
-				fqlService.initRules()
+				let pfqlService = new PFQLService([setOfRules])
+				pfqlService.initRules()
 
 				let results = []
 				sampleData.forEach(function(item) {
-					results.push(fqlService.findMatches(item).FQLMatches)
+					results.push(pfqlService.findMatches(item).PFQLMatches)
 				})
 				expect(results).eql(expected)
 			})
@@ -1204,12 +1204,12 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let fqlService = new FQLService([setOfRules])
-				fqlService.initRules()
+				let pfqlService = new PFQLService([setOfRules])
+				pfqlService.initRules()
 
 				let results = []
 				sampleData.forEach(function(item) {
-					results.push(fqlService.findMatches(item).FQLMatches)
+					results.push(pfqlService.findMatches(item).PFQLMatches)
 				})
 				expect(results).eql(expected)
 			})
@@ -1255,12 +1255,12 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let fqlService = new FQLService([setOfRules])
-				fqlService.initRules()
+				let pfqlService = new PFQLService([setOfRules])
+				pfqlService.initRules()
 
 				let results = []
 				sampleData.forEach(function(item) {
-					results.push(fqlService.findMatches(item).FQLMatches)
+					results.push(pfqlService.findMatches(item).PFQLMatches)
 				})
 				expect(results).eql(expected)
 			})
@@ -1311,12 +1311,12 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let fqlService = new FQLService([setOfRules])
-				fqlService.initRules()
+				let pfqlService = new PFQLService([setOfRules])
+				pfqlService.initRules()
 
 				let results = []
 				sampleData.forEach(function(item) {
-					results.push(fqlService.findMatches(item).FQLMatches)
+					results.push(pfqlService.findMatches(item).PFQLMatches)
 				})
 				expect(results).eql(expected)
 			})
@@ -1379,12 +1379,12 @@ describe('Feature Query Language - FQL', function() {
 					[0], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let fqlService = new FQLService([setOfRules])
-				fqlService.initRules()
+				let pfqlService = new PFQLService([setOfRules])
+				pfqlService.initRules()
 
 				let results = []
 				sampleData.forEach(function(item) {
-					results.push(fqlService.findMatches(item).FQLMatches)
+					results.push(pfqlService.findMatches(item).PFQLMatches)
 				})
 				expect(results).eql(expected)
 			})
@@ -1425,13 +1425,13 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let fqlService = new FQLService([setOfRules])
+				let pfqlService = new PFQLService([setOfRules])
 
-				fqlService.initRules()
+				pfqlService.initRules()
 
 				let results = []
 				sampleData.forEach(function(item) {
-					results.push(fqlService.findMatches(item).FQLMatches)
+					results.push(pfqlService.findMatches(item).PFQLMatches)
 				})
 				expect(results).eql(expected)
 			})
@@ -1483,13 +1483,13 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let fqlService = new FQLService(setsOfRules)
+				let pfqlService = new PFQLService(setsOfRules)
 
-				fqlService.initRules()
+				pfqlService.initRules()
 
 				let results = []
 				sampleData.forEach(function(item) {
-					results.push(fqlService.findMatches(item).FQLMatches)
+					results.push(pfqlService.findMatches(item).PFQLMatches)
 				})
 				expect(results).eql(expected)
 			})
@@ -1514,22 +1514,22 @@ describe('Feature Query Language - FQL', function() {
 						]
 					}
 				]
-				let fqlServiceP = new FQLService([setOfRulesPos]),
-					fqlServiceNP = new FQLService([setOfRulesNonPos])
+				let pfqlServiceP = new PFQLService([setOfRulesPos]),
+					pfqlServiceNP = new PFQLService([setOfRulesNonPos])
 
 
-				fqlServiceP.initRules()
+				pfqlServiceP.initRules()
 				let resultsP = []
 				sampleData.slice(0, 1).forEach(function(item) {
-					resultsP.push(fqlServiceP.findMatches(item))
+					resultsP.push(pfqlServiceP.findMatches(item))
 				})
 				console.log(resultsP)
-				fqlServiceNP.initRules()
+				pfqlServiceNP.initRules()
 
 				let resultsNP = []
 				console.log(sampleData.slice(0, 1))
 				sampleData.slice(0, 1).forEach(function(item) {
-					resultsNP.push(fqlServiceNP.findMatches(item))
+					resultsNP.push(pfqlServiceNP.findMatches(item))
 				})
 
 				console.log(resultsP)
@@ -1581,13 +1581,13 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let fqlService = new FQLService([setOfRules])
+				let pfqlService = new PFQLService([setOfRules])
 
-				fqlService.initRules()
+				pfqlService.initRules()
 
 				let results = []
 				sampleData.forEach(function(item) {
-					results.push(fqlService.findMatches(item).FQLMatches)
+					results.push(pfqlService.findMatches(item).PFQLMatches)
 				})
 				expect(results).eql(expected)
 			})
@@ -1652,13 +1652,13 @@ describe('Feature Query Language - FQL', function() {
 					[0], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let fqlService = new FQLService([setOfRules])
+				let pfqlService = new PFQLService([setOfRules])
 
-				fqlService.initRules()
+				pfqlService.initRules()
 
 				let results = []
 				sampleData.forEach(function(item) {
-					results.push(fqlService.findMatches(item).FQLMatches)
+					results.push(pfqlService.findMatches(item).PFQLMatches)
 				})
 				expect(results).eql(expected)
 			})
@@ -1730,13 +1730,13 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let fqlService = new FQLService([setOfRules])
+				let pfqlService = new PFQLService([setOfRules])
 
-				fqlService.initRules()
+				pfqlService.initRules()
 
 				let results = []
 				sampleData.forEach(function(item) {
-					results.push(fqlService.findMatches(item).FQLMatches)
+					results.push(pfqlService.findMatches(item).PFQLMatches)
 				})
 				expect(results).eql(expected)
 			})
@@ -1801,13 +1801,13 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[0] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let fqlService = new FQLService([setOfRules])
+				let pfqlService = new PFQLService([setOfRules])
 
-				fqlService.initRules()
+				pfqlService.initRules()
 
 				let results = []
 				sampleData.forEach(function(item) {
-					results.push(fqlService.findMatches(item).FQLMatches)
+					results.push(pfqlService.findMatches(item).PFQLMatches)
 				})
 				expect(results).eql(expected)
 			})
@@ -1859,13 +1859,13 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let fqlService = new FQLService([setOfRules])
+				let pfqlService = new PFQLService([setOfRules])
 
-				fqlService.initRules()
+				pfqlService.initRules()
 
 				let results = []
 				sampleData.forEach(function(item) {
-					results.push(fqlService.findMatches(item).FQLMatches)
+					results.push(pfqlService.findMatches(item).PFQLMatches)
 				})
 				expect(results).eql(expected)
 			})
@@ -1915,13 +1915,13 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let fqlService = new FQLService([setOfRules])
+				let pfqlService = new PFQLService([setOfRules])
 
-				fqlService.initRules()
+				pfqlService.initRules()
 
 				let results = []
 				sampleData.forEach(function(item) {
-					results.push(fqlService.findMatches(item).FQLMatches)
+					results.push(pfqlService.findMatches(item).PFQLMatches)
 				})
 				expect(results).eql(expected)
 			})
@@ -1971,13 +1971,13 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let fqlService = new FQLService([setOfRules])
+				let pfqlService = new PFQLService([setOfRules])
 
-				fqlService.initRules()
+				pfqlService.initRules()
 
 				let results = []
 				sampleData.forEach(function(item) {
-					results.push(fqlService.findMatches(item).FQLMatches)
+					results.push(pfqlService.findMatches(item).PFQLMatches)
 				})
 				expect(results).eql(expected)
 			})
@@ -2023,13 +2023,13 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let fqlService = new FQLService([setOfRules])
+				let pfqlService = new PFQLService([setOfRules])
 
-				fqlService.initRules()
+				pfqlService.initRules()
 
 				let results = []
 				sampleData.forEach(function(item) {
-					results.push(fqlService.findMatches(item).FQLMatches)
+					results.push(pfqlService.findMatches(item).PFQLMatches)
 				})
 				expect(results).eql(expected)
 			})
@@ -2081,13 +2081,13 @@ describe('Feature Query Language - FQL', function() {
 					[0], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[0] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let fqlService = new FQLService([setOfRules])
+				let pfqlService = new PFQLService([setOfRules])
 
-				fqlService.initRules()
+				pfqlService.initRules()
 
 				let results = []
 				sampleData.forEach(function(item) {
-					results.push(fqlService.findMatches(item).FQLMatches)
+					results.push(pfqlService.findMatches(item).PFQLMatches)
 				})
 				expect(results).eql(expected)
 			})
@@ -2139,13 +2139,13 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let fqlService = new FQLService([setOfRules])
+				let pfqlService = new PFQLService([setOfRules])
 
-				fqlService.initRules()
+				pfqlService.initRules()
 
 				let results = []
 				sampleData.forEach(function(item) {
-					results.push(fqlService.findMatches(item).FQLMatches)
+					results.push(pfqlService.findMatches(item).PFQLMatches)
 				})
 				expect(results).eql(expected)
 			})
@@ -2215,13 +2215,13 @@ describe('Feature Query Language - FQL', function() {
 					[0], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[0] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let fqlService = new FQLService([setOfRules])
+				let pfqlService = new PFQLService([setOfRules])
 
-				fqlService.initRules()
+				pfqlService.initRules()
 
 				let results = []
 				sampleData.forEach(function(item) {
-					results.push(fqlService.findMatches(item).FQLMatches)
+					results.push(pfqlService.findMatches(item).PFQLMatches)
 				})
 				expect(results).eql(expected)
 			})
@@ -2298,13 +2298,13 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[0] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let fqlService = new FQLService([setOfRules])
+				let pfqlService = new PFQLService([setOfRules])
 
-				fqlService.initRules()
+				pfqlService.initRules()
 
 				let results = []
 				sampleData.forEach(function(item) {
-					results.push(fqlService.findMatches(item).FQLMatches)
+					results.push(pfqlService.findMatches(item).PFQLMatches)
 				})
 				expect(results).eql(expected)
 			})
@@ -2393,13 +2393,13 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let fqlService = new FQLService([setOfRules])
+				let pfqlService = new PFQLService([setOfRules])
 
-				fqlService.initRules()
+				pfqlService.initRules()
 
 				let results = []
 				sampleData.forEach(function(item) {
-					results.push(fqlService.findMatches(item).FQLMatches)
+					results.push(pfqlService.findMatches(item).PFQLMatches)
 				})
 				expect(results).eql(expected)
 			})
@@ -2481,13 +2481,13 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let fqlService = new FQLService([setOfRules])
+				let pfqlService = new PFQLService([setOfRules])
 
-				fqlService.initRules()
+				pfqlService.initRules()
 
 				let results = []
 				sampleData.forEach(function(item) {
-					results.push(fqlService.findMatches(item).FQLMatches)
+					results.push(pfqlService.findMatches(item).PFQLMatches)
 				})
 				expect(results).eql(expected)
 			})
@@ -2546,13 +2546,13 @@ describe('Feature Query Language - FQL', function() {
 					[0], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[0] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let fqlService = new FQLService([setOfRules])
+				let pfqlService = new PFQLService([setOfRules])
 
-				fqlService.initRules()
+				pfqlService.initRules()
 
 				let results = []
 				sampleData.forEach(function(item) {
-					results.push(fqlService.findMatches(item).FQLMatches)
+					results.push(pfqlService.findMatches(item).PFQLMatches)
 				})
 				expect(results).eql(expected)
 			})
@@ -2598,13 +2598,13 @@ describe('Feature Query Language - FQL', function() {
 					[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let fqlService = new FQLService([setOfRules])
+				let pfqlService = new PFQLService([setOfRules])
 
-				fqlService.initRules()
+				pfqlService.initRules()
 
 				let results = []
 				sampleData.forEach(function(item) {
-					results.push(fqlService.findMatches(item).FQLMatches)
+					results.push(pfqlService.findMatches(item).PFQLMatches)
 				})
 				expect(results).eql(expected)
 			})
@@ -2705,13 +2705,13 @@ describe('Feature Query Language - FQL', function() {
 					[0], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[0] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let fqlService = new FQLService([setOfRules])
+				let pfqlService = new PFQLService([setOfRules])
 
-				fqlService.initRules()
+				pfqlService.initRules()
 
 				let results = []
 				sampleData.forEach(function(item) {
-					results.push(fqlService.findMatches(item).FQLMatches)
+					results.push(pfqlService.findMatches(item).PFQLMatches)
 				})
 				expect(results).eql(expected)
 			})
@@ -2785,13 +2785,13 @@ describe('Feature Query Language - FQL', function() {
 					[0], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 					[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 				]
-				let fqlService = new FQLService([setOfRules])
+				let pfqlService = new PFQLService([setOfRules])
 
-				fqlService.initRules()
+				pfqlService.initRules()
 
 				let results = []
 				sampleData.forEach(function(item) {
-					results.push(fqlService.findMatches(item).FQLMatches)
+					results.push(pfqlService.findMatches(item).PFQLMatches)
 				})
 				expect(results).eql(expected)
 			})
@@ -2847,12 +2847,12 @@ describe('Feature Query Language - FQL', function() {
 				[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 				[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 			]
-			let fqlService = new FQLService(setsOfRules)
+			let pfqlService = new PFQLService(setsOfRules)
 			let results = []
-			fqlService.initRules()
+			pfqlService.initRules()
 			let promises = []
 			sampleData.forEach(function(item) {
-				results.push(fqlService.findMatches(item).FQLMatches)
+				results.push(pfqlService.findMatches(item).PFQLMatches)
 			})
 			expect(results).eql(expected)
 		})
@@ -2934,13 +2934,13 @@ describe('Feature Query Language - FQL', function() {
 				[1], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 				[1] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 			]
-			let fqlService = new FQLService(setsOfRules)
+			let pfqlService = new PFQLService(setsOfRules)
 
 			let results = []
-			fqlService.initRules()
+			pfqlService.initRules()
 			let promises = []
 			sampleData.forEach(function(item) {
-				results.push(fqlService.findMatches(item).FQLMatches)
+				results.push(pfqlService.findMatches(item).PFQLMatches)
 			})
 			expect(results).eql(expected)
 		})
@@ -3041,13 +3041,13 @@ describe('Feature Query Language - FQL', function() {
 				[1], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 				[1] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 			]
-			let fqlService = new FQLService(setsOfRules)
+			let pfqlService = new PFQLService(setsOfRules)
 
 			let results = []
-			fqlService.initRules()
+			pfqlService.initRules()
 			let promises = []
 			sampleData.forEach(function(item) {
-				results.push(fqlService.findMatches(item).FQLMatches)
+				results.push(pfqlService.findMatches(item).PFQLMatches)
 			})
 			expect(results).eql(expected)
 		})
@@ -3100,13 +3100,13 @@ describe('Feature Query Language - FQL', function() {
 				[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 				[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 			]
-			let fqlService = new FQLService(setsOfRules)
+			let pfqlService = new PFQLService(setsOfRules)
 
 			let results = []
-			fqlService.initRules()
+			pfqlService.initRules()
 			let promises = []
 			sampleData.forEach(function(item) {
-				results.push(fqlService.findMatches(item).FQLMatches)
+				results.push(pfqlService.findMatches(item).PFQLMatches)
 			})
 			expect(results).eql(expected)
 		})
@@ -3159,13 +3159,13 @@ describe('Feature Query Language - FQL', function() {
 				[], // TM | Cache_1 | Cache_1 | TM | HAMP | MCPsignal
 				[] // TM | Cache_2 | Cache_2 | Cache_2 | TM | HAMP | MCPsignal
 			]
-			let fqlService = new FQLService(setsOfRules)
+			let pfqlService = new PFQLService(setsOfRules)
 
 			let results = []
-			fqlService.initRules()
+			pfqlService.initRules()
 			let promises = []
 			sampleData.forEach(function(item) {
-				results.push(fqlService.findMatches(item).FQLMatches)
+				results.push(pfqlService.findMatches(item).PFQLMatches)
 			})
 			expect(results).eql(expected)
 		})

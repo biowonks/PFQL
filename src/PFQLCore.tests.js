@@ -2,7 +2,7 @@
 'use strict'
 let expect = require('chai').expect
 
-let RuleFql = require('./RuleFql.js')
+let RuleFql = require('./PFQLCore.js')
 
 describe('Class RuleFql ::', function() {
 	describe('Initializing the class', () => {

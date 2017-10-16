@@ -1,6 +1,6 @@
 'use strict'
 
-let RuleFql = require('./RuleFql.js')
+let PFQLCore = require('./PFQLCore.js')
 
 module.exports =
 /**
@@ -11,7 +11,7 @@ module.exports =
  * against N rules
  *
  * */
-class FQLService {
+class PFQLService {
 	constructor(setsOfRules = false) {
 		this.setsOfRules = setsOfRules
 		this.parsedSetsOfRules = []
@@ -61,7 +61,7 @@ class FQLService {
 			if (isMatch)
 				matchList.push(ruleIndex)
 		})
-		newItem.FQLMatches = matchList
+		newItem.PFQLMatches = matchList
 		return newItem
 	}
 
@@ -103,8 +103,8 @@ class FQLService {
 		// console.log('_testPos :: ' + JSON.stringify(parsedRules))
 
 		for (let i = 0; i < parsedRules.rules.length; i++) { // check each rule
-			let currRule = new RuleFql({instructions: parsedRules.rules[i], pos: i}),
-				nextRule = new RuleFql({instructions: parsedRules.rules[i + 1], pos: i + 1}),
+			let currRule = new PFQLCore({instructions: parsedRules.rules[i], pos: i}),
+				nextRule = new PFQLCore({instructions: parsedRules.rules[i + 1], pos: i + 1}),
 				classifiedMatches = {hard: [], soft: [], next: []}
 
 			// console.log('_testPos :: ' + 'Rule -> ' + JSON.stringify(currRule))
@@ -211,8 +211,8 @@ class FQLService {
 
 	/**
 	 * Classify matches into hard and soft matches.
-	 * @param {RuleFql} currRule - Current Rule
-	 * @param {RuleFql} nextRule - Next rule
+	 * @param {PFQLCore} currRule - Current Rule
+	 * @param {PFQLCore} nextRule - Next rule
 	 * @returns {Object} { hard: [], soft: []}
 	 */
 
