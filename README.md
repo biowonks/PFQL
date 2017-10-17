@@ -49,9 +49,11 @@ example of input data (`my_data.json`):
 Then you can use as a service:
 
 ```javascript
+let pfql = require('pfql')
+
 let sampleData = require('./my_data.json')
 
-let pfqlService = new PFQLService([setOfRules])
+let pfqlService = new pfql.PFQLService([setsOfRules])
 pfqlService.initRules()
 
 sampleData.forEach(function(item) {
@@ -61,7 +63,8 @@ sampleData.forEach(function(item) {
 
 Or use it as a stream
 ```javascript
-let pfqlStream = new PFQLStream(setOfRules)
+let pfql = require('pfql')
+let pfqlStream = new pfql.PFQLStream([setsOfRules])
 
 fs.createReadStream('my_data.json')
     .pipe(pfqlStream)

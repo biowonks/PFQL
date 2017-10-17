@@ -78,29 +78,35 @@ Suppose the input items are stored in an `json` file `my_data.json`. The followi
 The rule in this case is any protein that starts with a CheW domain as defined by the pfam28 database.
 
 ```javascript
-'use strict'
+let pfql = require('pfql')
 
-let PFQLService = require('pfql').PFQLService,
-    sampleData = require('./my_data.json')
-
-let setsOfRules = [
-  [
+let sampleData = [
     {
-      pos: [
-        {
-          resource: 'fql',
-          feature: '^'
-        },
-        {
-          resource: 'pfam28',
-          feature: 'CheW'
-        }
-      ]
+       "t": {
+          "das": [
+             ["TM",14,31],
+             ["TM",60,76]
+          ],
+          "pfam28": [
+             ["MCPsignal",192,381]
+          ],
+       }
     }
   ]
+let query = [
+    [
+       {
+          Npos: [
+             {
+                resource: 'pfam28',
+                feature: 'MCPsignal'
+             }
+          ]
+       }
+    ]
 ]
 
-let pfqlService = new PFQLService([setOfRules])
+let pfqlService = new pfql.PFQLService([query])
 pfqlService.initRules()
 
 sampleData.forEach(function(item) {
@@ -110,10 +116,11 @@ sampleData.forEach(function(item) {
 
 #### Using PFQLStream
 
-The same can effect can be achieved with `PFQLStream`.
+The same effect can be achieved with `PFQLStream`.
 
 ```javascript
-let pfqlStream = new PFQLStream(setOfRules)
+let pfql = require('pfql')
+let pfqlStream = new pfql.PFQLStream(query)
 
 fs.createReadStream('my_data.json')
     .pipe(pfqlStream)
