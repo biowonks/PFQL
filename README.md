@@ -16,32 +16,34 @@ $ npm install pfql
 Example of sets of rules:
 ```javascript
 let setsOfRules = [
-    [
-        {
-            Npos: [
-                {
-                    resource: 'pfam28',
-                    feature: 'MCPsignal'
-                }
-            ]
-        }
-    ]
+   [
+      {
+         Npos: [
+            {
+               resource: 'pfam28',
+               feature: 'MCPsignal'
+            }
+         ]
+      }
+   ]
 ]
 ```
 
 example of input data (`my_data.json`):
 ```json
- {
-    "t": {
+[
+  {
+     "t": {
         "das": [
-            ["TM",14,31],
-            ["TM",60,76]
+           ["TM",14,31],
+           ["TM",60,76]
         ],
         "pfam28": [
-            ["MCPsignal",192,381]
+           ["MCPsignal",192,381]
         ],
-    }
- }
+     }
+  }
+]
 ```
 
 Then you can use as a service:

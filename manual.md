@@ -28,39 +28,43 @@ The readable stream pushing objects like these:
 It reads objects and adds the field
 
 ```json
-{
+[
+  {
     "t": {
-        "resource1": [
-            ["feature",start, stop],
-            ["feature2",start, stop],
-        ],
-        "resource2": [
-            ["feature",start, stop],
-        ],
+      "resource1": [
+        ["feature",start, stop],
+        ["feature2",start, stop],
+      ],
+      "resource2": [
+        ["feature",start, stop],
+      ],
     }
-}
+  }
+]
 ```
 
 A real example of an input with domain architecture information about pfam28, smart and transmembrane predictions by das and TMHMM is:
 
 ```json
- {
+[
+  {
     "t": {
-        "das": [
-            ["TM",14,31,21,4.055,0.0003693],
-            ["TM",60,76,66,3.958,0.0005206]
-        ],
-        "pfam28": [
-            ["MCPsignal",192,381,"..",26.8,4,207,".]",186,381,"..",195.8,3.5e-61,3.9e-58,0.96]
-        ],
-        "smart": [
-            ["SM00283",135,382,1.3e-81]
-        ],
-        "tmhmm": [
-            ["TM",16,38],["TM",60,82]
-        ]
+      "das": [
+        ["TM",14,31,21,4.055,0.0003693],
+        ["TM",60,76,66,3.958,0.0005206]
+      ],
+      "pfam28": [
+        ["MCPsignal",192,381,"..",26.8,4,207,".]",186,381,"..",195.8,3.5e-61,3.9e-58,0.96]
+      ],
+      "smart": [
+        ["SM00283",135,382,1.3e-81]
+      ],
+      "tmhmm": [
+        ["TM",16,38],["TM",60,82]
+      ]
     }
- }
+  }
+]
 ```
 
 Notice that we name the feature `TM` in the transmembrane predictions, so we can use to make rules about this feature later. We will talk about how to setup these rules later.
