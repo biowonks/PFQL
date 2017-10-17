@@ -1,6 +1,6 @@
 {
   "name": "pfql",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "PFQL - Protein Feature Query Language",
   "main": "index.js",
   "scripts": {

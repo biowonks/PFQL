@@ -386,7 +386,7 @@ If you want to select all sequences with at least 1 match to CheW domain in pfam
 
 You can also pass alternative rules. For that you need a new object in the *set of rules*. For example:
 
-If you want to select all sequences with at least 1 match to CheW domain in pfam28 OR only 1 match to HATPase_c domain in pfam28:
+If you want to select all sequences with at least 2 match to CheW domain in pfam28 OR only 1 match to HATPase_c domain in pfam28:
 
 ```javascript
 [
