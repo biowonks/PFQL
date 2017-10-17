@@ -36,7 +36,8 @@
     }
   ],
   "dependencies": {
-    "bunyan": "^1.8.8"
+    "bunyan": "^1.8.8",
+    "lodash": "^4.17.4"
   },
   "devDependencies": {
     "chai": "^3.5.0",

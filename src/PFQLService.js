@@ -1,5 +1,7 @@
 'use strict'
 
+let lodash = require('lodash')
+
 let PFQLCore = require('./PFQLCore.js')
 
 module.exports =
@@ -38,7 +40,7 @@ class PFQLService {
 	}
 
 	findMatches(item) {
-		let newItem = JSON.parse(JSON.stringify(item))
+		let newItem = lodash.cloneDeep(item)
 		let matchList = []
 		this.parsedSetsOfRules.forEach((parsedRules, ruleIndex) => {
 			let DAarrayInfo = this._processFeaturesInfo(newItem, ruleIndex),
