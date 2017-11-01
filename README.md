@@ -55,7 +55,7 @@ let pfql = require('pfql')
 
 let sampleData = require('./my_data.json')
 
-let pfqlService = new pfql.PFQLService([setsOfRules])
+let pfqlService = new pfql.PFQLService(query)
 pfqlService.initRules()
 
 sampleData.forEach(function(item) {
@@ -66,7 +66,7 @@ sampleData.forEach(function(item) {
 Or use it as a stream
 ```javascript
 let pfql = require('pfql')
-let pfqlStream = new pfql.PFQLStream([setsOfRules])
+let pfqlStream = new pfql.PFQLStream(query)
 
 fs.createReadStream('my_data.json')
     .pipe(pfqlStream)
