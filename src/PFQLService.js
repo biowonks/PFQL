@@ -27,7 +27,7 @@ class PFQLService {
 			this.resources = [...Array(this.query.length).keys()].map((i) => [])
 			this.query.forEach((setsOfRules, ruleIndex) => {
 				let parsedRules = []
-				setsOfRules.forEach((rules) => {
+				setsOfRules.rules.forEach((rules) => {
 					this._isValidRule(rules)
 					parsedRules.push(this._parseRules(rules, ruleIndex))
 				})

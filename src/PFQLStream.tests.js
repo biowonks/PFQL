@@ -15,22 +15,24 @@ describe('PFQLStream test suit ::', function() {
 		})
 		readable.push(null)
 
-		let setOfRules = [
-			[
-				{
-					pos: [
-						{
-							resource: 'pfam28',
-							feature: 'CheW',
-							count: '{2,3}'
-						},
-						{
-							resource: 'fql',
-							feature: '$'
-						}
-					]
-				}
-			]
+		let query = [
+			{
+				rules: [
+					{
+						pos: [
+							{
+								resource: 'pfam28',
+								feature: 'CheW',
+								count: '{2,3}'
+							},
+							{
+								resource: 'fql',
+								feature: '$'
+							}
+						]
+					}
+				]
+			}
 		]
 
 		let expected = [
@@ -62,7 +64,7 @@ describe('PFQLStream test suit ::', function() {
 
 		let listOfData = []
 
-		let pfqlStream = new PFQLStream(setOfRules)
+		let pfqlStream = new PFQLStream(query)
 		pfqlStream.progressReportNumber = 1
 		readable.pipe(pfqlStream)
 			.on('data', function(item) {
