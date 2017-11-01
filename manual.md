@@ -1,4 +1,4 @@
-# PPFQL Manual
+# PFQL Manual
 
 > This manual is under construction.
 
