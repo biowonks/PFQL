@@ -15,17 +15,19 @@ $ npm install pfql
 
 Example of sets of rules:
 ```javascript
-let setsOfRules = [
-   [
-      {
-         Npos: [
+let query = [
+    {
+        rules: [
             {
-               resource: 'pfam28',
-               feature: 'MCPsignal'
+                Npos: [
+                    {
+                    resource: 'pfam28',
+                    feature: 'MCPsignal'
+                    }
+                ]
             }
-         ]
-      }
-   ]
+        ]
+    }
 ]
 ```
 

@@ -94,16 +94,18 @@ let sampleData = [
     }
   ]
 let query = [
-    [
-       {
-          Npos: [
-             {
-                resource: 'pfam28',
-                feature: 'MCPsignal'
-             }
-          ]
-       }
-    ]
+    {
+        rules:  [
+            {
+                Npos: [
+                    {
+                        resource: 'pfam28',
+                        feature: 'MCPsignal'
+                    }
+                ]
+            }
+        ]
+    }
 ]
 
 let pfqlService = new pfql.PFQLService([query])
@@ -135,32 +137,35 @@ In PFQL, there are two types of rules: **non-positional** and **positional**. Th
 
 The rules are passed as a JSON object to PFQL and it has two keys: `Npos` for non-positional rules and `pos` for positional rules. None of these keys are mandatory and PFQL will return `true` match to any sequence if rules are an empty object. Other keys will be ignored. PQFL will throw an `Error` if the constructor receives no rules.
 
-The way rules are organized in PFQL is the following:
+The organization of PFQL rules obeys the following structure:
 
-* Query - Array containing sets of rules that define protein family. Each element is a protein family
-  * Sets of Rules - Array containing sets of rules.
-    * Set of rules - Array containing objects with positional and non-positional rules that must match
-      * rule - single instruction or set of instructions that must match.
-        * instruction - single snipet of matching definition.
+* query - Array containing collections of sets of rules for a single protein family.
+    * collections of sets of rules - Object containing sets of rules under the key `rules`.
+        * sets of rules - Array containing objects with positional and non-positional rules that must match
+            * set of rules - Object containing rule under the key `pos` and `Npos`.
+                * rule - set of instructions that must match.
+                    * instruction - single snippet of matching definition.
 
-Example of a simple query containing only 1 protein family definition:
+Example of a simple query containing 1 protein family definition:
 
 ```javascript
 let setsOfRules = [ // query
-    [ // set of rules
-        {
-            pos: [ //rule
-                { //instruction
-                    resource: 'fql',
-                    feature: '^'
-                },
-                {
-                    resources: 'pfam28',
-                    feature: 'CheW'
-                },
-            ]
-        }
-    ]
+    { //collection of rules
+        rules: [ //sets of rules
+            { //set of rules
+                pos: [ //rule
+                    { //instruction
+                        resource: 'fql',
+                        feature: '^'
+                    },
+                    {
+                        resources: 'pfam28',
+                        feature: 'CheW'
+                    },
+                ]
+            }
+        ]
+    }
 ]
 ```
 
@@ -168,95 +173,106 @@ Example of a more complex query containing 3 protein family definitions:
 
 ```javascript
 let setsOfRules = [ //query
-    [ // first sets of rules
-        { //set of rules
-            pos: [ // rule
-                { // instruction
-                    resource: 'pfam28',
-                    feature: 'CheW'
-                }
-            ]
-        }
-    ],
-    [ // second sets of rules
-        { // set of rules
-            pos: [ // rule
-                { // instruction
-                    resource: 'fql',
-                    feature: '^'
-                },
-                { // instruction
-                    resource: 'das',
-                    feature: 'TM',
-                    count: '{1}'
-                },
-                { // instruction
-                    resource: 'pfam28',
-                    feature: '.*',
-                    count: '{1,}'
-                },
-                { // instruction
-                    resource: 'das',
-                    feature: 'TM',
-                    count: '{1}'
-                },
-                { // instruction
-                    resource: 'pfam28',
-                    feature: '.*',
-                    count: '{1,}'
-                },
-                { // instruction
-                    resource: 'pfam28',
-                    feature: 'MCPsignal',
-                    count: '{1}'
-                },
-                { // instruction
-                    resource: 'fql',
-                    feature: '$'
-                }
-            ]
-        }
-    ],
-    [ // third sets of rules
-        { // set of rules 1
-            pos: [ // rule
-                { // instruction
-                    resource: 'fql',
-                    feature: '^'
-                },
-                { // instruction
-                    resource: 'pfam28',
-                    feature: '.*',
-                    count: '{2}'
-                },
-                { // instruction
-                    resource: 'fql',
-                    feature: '$'
-                }
-            ]
-        },
-        { // set of rules 2
-            pos: [ // rule
-                { // instruction
-                    resource: 'fql',
-                    feature: '^'
-                },
-                { // instruction
-                    resource: 'das',
-                    feature: 'TM',
-                    count: '{2}'
-                }
-            ],
-            Npos: [ // rule
-                { // instruction
-                    resource: 'pfam28',
-                    feature: 'HAMP'
-                }
-            ]
-        },
-    ]
+    { //collection of rules for protein 1
+        rules: [ //sets of rules
+            { //set of rules
+                pos: [ // rule
+                    { // instruction
+                        resource: 'pfam28',
+                        feature: 'CheW'
+                    }
+                ]
+            }
+        ]
+    },
+    { //collection of rules for protein 2
+        rules:  [ //sets of rules
+            { // set of rules
+                pos: [ // rule
+                    { // instruction
+                        resource: 'fql',
+                        feature: '^'
+                    },
+                    { // instruction
+                        resource: 'das',
+                        feature: 'TM',
+                        count: '{1}'
+                    },
+                    { // instruction
+                        resource: 'pfam28',
+                        feature: '.*',
+                        count: '{1,}'
+                    },
+                    { // instruction
+                        resource: 'das',
+                        feature: 'TM',
+                        count: '{1}'
+                    },
+                    { // instruction
+                        resource: 'pfam28',
+                        feature: '.*',
+                        count: '{1,}'
+                    },
+                    { // instruction
+                        resource: 'pfam28',
+                        feature: 'MCPsignal',
+                        count: '{1}'
+                    },
+                    { // instruction
+                        resource: 'fql',
+                        feature: '$'
+                    }
+                ]
+            }
+        ]
+    },
+    { //collection of rules for protein 3
+        rules: [ // sets of rules
+            { // set of rules 1
+                pos: [ // rule
+                    { // instruction
+                        resource: 'fql',
+                        feature: '^'
+                    },
+                    { // instruction
+                        resource: 'pfam28',
+                        feature: '.*',
+                        count: '{2}'
+                    },
+                    { // instruction
+                        resource: 'fql',
+                        feature: '$'
+                    }
+                ]
+            },
+            { // set of rules 2
+                pos: [ // rule 1
+                    { // instruction
+                        resource: 'fql',
+                        feature: '^'
+                    },
+                    { // instruction
+                        resource: 'das',
+                        feature: 'TM',
+                        count: '{2}'
+                    }
+                ],
+                Npos: [ // rule 2
+                    { // instruction
+                        resource: 'pfam28',
+                        feature: 'HAMP'
+                    }
+                ]
+            },
+        ]
+    }
 ]
 ```
+
+#### What's the reason behind the key `rules`?
+
+We may want to keep the metadata related to that particular collection of sets of rules. To accommodate that request, we included sets of rules in an object under the key `rules`. We now can store related metadata under other keys such as `meta`.
+
 
 Let's explore the types of rules:
 
@@ -386,7 +402,7 @@ If you want to select all sequences with at least 1 match to CheW domain in pfam
 
 You can also pass alternative rules. For that you need a new object in the *set of rules*. For example:
 
-If you want to select all sequences with at least 1 match to CheW domain in pfam28 OR only 1 match to HATPase_c domain in pfam28:
+If you want to select all sequences with at least 2 match to CheW domain in pfam28 OR only 1 match to HATPase_c domain in pfam28:
 
 ```javascript
 [
