@@ -65,6 +65,7 @@ describe('PFQLStream test suit ::', function() {
 		let listOfData = []
 
 		let pfqlStream = new PFQLStream(query)
+		pfqlStream.initRules()
 		pfqlStream.progressReportNumber = 1
 		readable.pipe(pfqlStream)
 			.on('data', function(item) {

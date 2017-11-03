@@ -18,6 +18,9 @@ class PFQLStream extends Transform {
 		this.log.info('start')
 		this.numItems = 0
 		this.progressReportNumber = progressReportNumber
+	}
+
+	initRules() {
 		this.pfqlService = new PFQLService(this.setsOfRules)
 		this.pfqlService.initRules()
 	}

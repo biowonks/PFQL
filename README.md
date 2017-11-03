@@ -68,6 +68,7 @@ Or use it as a stream
 let pfql = require('pfql')
 let pfqlStream = new pfql.PFQLStream(query)
 
+pfqlStream.initRules()
 fs.createReadStream('my_data.json')
     .pipe(pfqlStream)
     .on('data', function(item) {
@@ -83,6 +84,6 @@ It is our hypothesis that a more accurate search in the protein universe for mem
 
 PFQL exposes two classes: PFQLStream and PFQLService
 
-The PFLQStream is a `Transform` stream that wraps the PFQLService for convenience. The constructor takes a set of matching rules that should describe the protein family of interest. For example, if the protein family of interest is the chemotaxis scaffold CheW, a possible rule would be `match all sequences that has only one CheW domain, as defined by Pfam 30 database`. In reality, the `FQLStream` can process multiple protein families definitions at once and therefore, the constructor takes an array of set of matching rules, each set for protein family. The output is the same information as the input plus a field `FQLMatches` with the indexes of the set of rules that this particular protein matches.
+The PFLQStream is a `Transform` stream that wraps the PFQLService for convenience. The constructor takes a set of matching rules that should describe the protein family of interest. For example, if the protein family of interest is the chemotaxis scaffold CheW, a possible rule would be `match all sequences that has only one CheW domain, as defined by Pfam 30 database`. In reality, the `FQLStream` can process multiple protein families definitions at once and therefore, the constructor takes an array of set of matching rules, each set for protein family. The rules must be initiated with the method `.initRules`. The output is the same information as the input plus a field `FQLMatches` with the indexes of the set of rules that this particular protein matches.
 
 To learn more about how to setup rules, check out the [manual](manual.md)
