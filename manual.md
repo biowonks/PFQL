@@ -4,7 +4,7 @@
 
 ## Understanding the fundamentals of PFQL
 
-PFQL is a flexible feature querying language for proteins that is based in a filtering mechanism. By feature we call anything that can be identified in a protein sequence: transmembrane regions, domain models, signal peptides, low complex regions and more.
+PFQL is a flexible feature querying language for proteins that is based in a filtering mechanism. By feature we call _feature_ anything that can be identified in a protein sequence: transmembrane regions, domain models, signal peptides, low complex regions and more.
 
 ### What is domain architecture ? (to do)
 
