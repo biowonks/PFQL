@@ -8,7 +8,7 @@ let sampleData = require('../test-data/PFQL-sample-input.json')
 describe('Feature Query Language - FQL', function() {
 	describe('Sanity checks', function() {
 		it('If no rules are passed, it should fail', function() {
-			let	pfqlService = new PFQLService()
+			let	pfqlService = new PFQLService(null)
 			expect(pfqlService.initRules.bind(pfqlService)).to.throw('No rules have been passed in the constructor')
 		})
 		it('If empty rules are passed, it should match any ', function() {

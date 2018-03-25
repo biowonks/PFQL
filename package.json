@@ -37,7 +37,7 @@
   ],
   "dependencies": {
     "bunyan": "^1.8.8",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.5"
   },
   "devDependencies": {
     "chai": "^3.5.0",
@@ -45,6 +45,6 @@
     "eslint": "^3.14.1",
     "istanbul": "^0.4.5",
     "mocha": "^3.2.0",
-    "nyc": "^11.2.1"
+    "nyc": "^11.6.0"
   }
 }
